@@ -1,0 +1,5 @@
+RES(background)
+RES(redbird1)
+RES(redbird2)
+RES(pig_s1)
+RES(sling)

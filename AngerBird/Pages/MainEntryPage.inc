@@ -1,0 +1,5 @@
+RES(entrybg)
+RES(bgquit)
+RES(msoundoff)
+RES(start1)
+RES(quiting)

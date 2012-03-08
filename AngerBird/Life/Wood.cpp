@@ -49,7 +49,7 @@ void Wood::Draw(TObjectData *status)
   if(pic_idx == 0) return;
   
   ///¿ªÊ¼show
-  float32 angle = sin2oc(body->GetAngle());
+  float32 angle = convRotAngle(sin2oc((body->GetAngle())));
 
   JImage *pic = GETIMG(*pic_idx);
   gpDC->drawImageWithRotate(pic, 

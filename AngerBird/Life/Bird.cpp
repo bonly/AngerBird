@@ -19,7 +19,7 @@ JImage* Bird::GetStatusPiC(TObjectData *)
     pic = GETIMG(bird[dt%2]);
   }
 
-  if (dt%40==0 && Life::status & s_waiting) ///原地跳动
+  if (dt%40==0 && Life::status & s_jumpAble) ///原地跳动
   {
     Life::status |= s_flip;
     body->GetFixtureList()->SetRestitution(0.f);
@@ -47,7 +47,7 @@ void Bird::Draw(TObjectData *status)
   JImage *pic = GetStatusPiC(status);
   if (pic==0) return;
 
-  if (Life::status & s_flip)
+  if ((Life::status & s_flip) && (Life::status & s_jumpAble))
   {
     flip_angle += 45;
     if (flip_angle >= 360)

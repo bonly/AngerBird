@@ -46,7 +46,7 @@ typedef struct _Object_Data
 void addObject(b2World *world, TObject *object,TObjectData* objectDataList,int& objectNum,
                TObjectData** controllable);
 
-void initBlock(b2World *world, int nFloorNum1, int nFloorList[][21],int SCREEN_SHIFT_Y,
+void initBlock(b2World *world, int nFloorNum1, int nFloorList[][21],
                int& nBlockNum, int nBlockList[][8],TObjectData* objectDataList,int& objectNum,
                TObjectData** controllable, GamePage* page, int screenMovey);
 

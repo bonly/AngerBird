@@ -40,7 +40,7 @@ RedBird::RedBird()
 
 void RedBird::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
 {
-  printf("鸟的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
+  printf("红鸟的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
   if(impulse->normalImpulses[0] >= 0.1f)///检查是否大于掉羽毛的压力值
   {
     int *aniFile = 0;

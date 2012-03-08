@@ -28,7 +28,7 @@ class Session1 : public GamePage
     static Page* create();
 
   public:
-    enum {PRELOAD=-10,PRELOADING,PRELOAD_END}; 
+    //enum {PRELOAD=-10,PRELOADING,PRELOAD_END}; 
     //Page* preload;
     ABDraw ab;
 

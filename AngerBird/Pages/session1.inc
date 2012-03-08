@@ -1,4 +1,4 @@
-RES(background)
+RES(1_bg)
 RES(redbird1)
 RES(redbird2)
 RES(pig_s1)

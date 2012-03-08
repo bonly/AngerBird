@@ -145,10 +145,10 @@ int CAPageScreen::OnPaint(void* pi)
 		gpDC->clearScreen();
 	}
 	
-    if(task->list[idx].page != 0)
-    {
-      task->list[idx].page->onPaint();
-    }
+  if(task->list[idx].page != 0)
+  {
+    task->list[idx].page->onPaint();
+  }
     return 0;
 }
 

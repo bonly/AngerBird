@@ -5,7 +5,7 @@ RES(bird)
 #endif
 
 #ifdef IMGSEG
-
+RES(floor_1_1_1, res/guanka/1_1/1_1_bench.png)
 /*********************  进入页面(YX)  *************************/ 
 RES(firstloading, res/entry/firstloading.png)
 RES(quiting,res/quiting.png)
@@ -25,11 +25,10 @@ RES(return_big, res/entry/return_big.png)
 RES(lock, res/entry/lock.png)
 RES(guanka_munber, res/entry/guanka_munber.png)
 RES(guanka_star, res/entry/guanka_star.png)
-/***********************************************/
-
-RES(background, res/backgroud/birdbg.png)
+/*******************session1***********************/
+RES(1_bg, res/backgroud/1_bg.png)
 RES(birdbg_extern, res/backgroud/birdbg_extern.png)
-RES(birdbg_grass, res/backgroud/birdbg_grass.png)
+RES(1_bg_grass, res/backgroud/1_bg_grass.png)
 
 /*********************  弹工  **************************/
 RES(sling, res/feather/sling.png)
@@ -144,6 +143,8 @@ RES(bird_three_1,res/bird/bird_three_1.png)
 RES(bird_three_2,res/bird/bird_three_2.png)
 
 /*****************************************************/
+
+
 RES(track, res/feather/fly_track.png)
 RES(whitecloud, res/feather/whitecloud.png)
 RES(whitecloud_big, res/feather/whitecloud_big.png)
@@ -151,9 +152,6 @@ RES(whitecloud_cir, res/feather/whitecloud_cir.png)
 RES(birdcloud, res/bird/whitecloud.png)
 RES(feather_red_1, res/feather/feather_red_1.png)
 RES(feather_red_2, res/feather/feather_red_2.png)
-RES(slingL50, res/slingL5.png)
-RES(slingL100, res/slingL10.png)
-RES(slingL200, res/slingL20.png)
 
 RES(pause1, res/menu/btn_stop_1.png)
 RES(pause2, res/menu/btn_stop_2.png)

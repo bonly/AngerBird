@@ -62,25 +62,31 @@ class GamePage : public Page
     virtual bool OnPointerDragged(int x, int y);
     virtual bool OnPointerReleased(int x, int y);
     virtual bool OnPointerPressed(int x, int y);
-   // void drawSlingLine(b2Body* bird);
-	 void drawSlingLine(int x, int y);
+    //void drawSlingLine(b2Body* bird);
+	  void drawSlingLine(int x, int y);
     void DrawData();
     void getScreenMove();
-	void drawGameBg();  //画背景图
-	void drawGrass();  //画青草
+	  void drawGameBg();  //画背景图
+	  void drawGrass();  //画青草
     void deleteObj();
     bool push_del(b2Body* obj);
     bool push_ani(Animation* aniobj);
     bool PlayAnimation();
+    bool JumpLine(int &x, int &y, const int tx, const int ty, const int inv);
+    bool getBird();
 
   public:
-    enum {GAME_LOADING =0, GAME_WAIT,GAME_SCROLL,GAME_RUNING,GAME_PAUSE}; ///50以前为加载步聚 wait:等操作 scroll:滚屏 runing:飞行中 pause:暂停
+    enum {PRELOAD=-10, PRELOADING, PRELOAD_END, 
+          GAME_LOADING =0, GAME_WAIT, GAME_GETBIRD, 
+          GAME_SCROLL, GAME_RUNING, GAME_PAUSE, GAME_OVER, GAME_END}; 
+    ///0以前为加载步聚由session控制,之后的由GamePage控制跳转 wait:等操作 scroll:滚屏 runing:飞行中 pause:暂停
     enum {SCROLL_UP,SCROLL_DOWN};
     int step;
-	int slingx;
-	int slingy;  //弹工坐标
+	  int slingx;
+	  int slingy;  //弹工坐标
     _Object_Data **controllable;
     _Object_Data *controlled;
+    int idxControl; ///所控制鸟在容器中的下标号
     //Page* leftMenu;
     b2World* world;
     b2ContactListener *contact;
@@ -89,7 +95,7 @@ class GamePage : public Page
 
     int blockShifty; //积木偏移位置
     float32 slingX;
-    float32 slingY;
+    float32 slingY; ///弹弓的受力点位置
 
     int lastY;
     static int SCREEN_SHIFT_Y;
@@ -98,16 +104,16 @@ class GamePage : public Page
     int track[ARRMAX][2];///记录飞行轨迹
     int track_num;///有效记录点数
 
-public:
-	TButtonArea btn[2];	
-	Image imgSling;
-	Image imgRope[3];
-	Image imgBg;
-	Image imgExtra;
-	Image imgGrass;
+  public:
+	  TButtonArea btn[2];	
+	  Image imgSling;
+	  Image imgRope[3];
+	  Image imgBg;
+	  Image imgExtra;
+	  Image imgGrass;
     Image imgBird[5];
 
-private:
+  private:
     b2Body* del[ARRMAX]; ///需删除的物体列表
     Animation* ani[ARRMAX];///本场景的动画列表
 

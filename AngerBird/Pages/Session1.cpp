@@ -14,7 +14,7 @@
 //#include "../rapidxml.hpp"
 #include "../BuildBlock.h"
 #include "../Page.h"
-
+extern bool gPaintStatus;
 //#define SCREEN_SHIFT_Y 0
 //活动物体列表
 //定义一个活动物体数量
@@ -29,9 +29,8 @@
  * 6: y
  * 7: 角度
  */
-static int nBlockNum=1;
+static int nBlockNum=17;
 static int nBlockList[][8]={ 
-  {1,0,0,FIXTURE_BIRD,SHAPE_RED_BIRD,20,100,0},
 {1,1,11,1,2,32,66,0},
 {1,2,7,1,2,32,169,0},
 {1,3,7,1,0,53,89,0},
@@ -50,13 +49,31 @@ static int nBlockList[][8]={
 {1,15,6,1,0,159,117,90},
 {1,16,5,1,2,178,109, 0}
 };
-//地面物体列表
-static int nFloorNum1=0;
+
+
+
+//////////////////////////////////
+static int nFloorNum=2;
 static int nFloorList[][21]={
-{ 0, 1, 10, 89, 4, 9, -29, 9, 25, -11, 25, -11, -30, 0, 0, 0, 0, 0, 0, 0 },
-{ 0, 1, 10, 149, 4, 9, -29, 9, 25, -11, 25, -11, -30, 0, 0, 0, 0, 0, 0, 0 }
+{ 0, ID_floor_1_1_1, 10, 89, 4, 9, -29, 9, 25, -11, 25, -11, -30, 0, 0, 0, 0, 0, 0, 0 },
+{ 0, ID_floor_1_1_1, 10, 149, 4, 9, -29, 9, 25, -11, 25, -11, -30, 0, 0, 0, 0, 0, 0, 0 }
 };
-//////////////////////////
+
+
+//////////////////////////////////
+static int nBirdNum=4;
+static int nBirdList[][8]={ 
+{1,0,7,3,21,12,170,0},
+{1,1,16,3,21,12,195,0},
+{1,2,8,3,21,12,220,0},
+{1,3,13,3,21,12,245, 0}
+};
+
+static int nBirdFloorNum=0;
+static int nBirdFloorList[][21]={
+	{0}
+};
+
 static int objectNum=0;
 static TObjectData objectDataList[MAX_OBJECTS];    //物体userdata的全局变量
 static TObjectData* s_controllable[10]; ///可控制物列表
@@ -107,6 +124,8 @@ void Session1::preLoad()
   #undef RES
   #undef IMGSEG
 
+  imgBg=GETIMG(ID_1_bg);
+  imgGrass=GETIMG(ID_1_bg_grass);
   createWorld();
 }
 
@@ -115,18 +134,29 @@ void Session1::running()
   switch(step)
   {
   case PRELOAD: ///指示预载页面,并同时加载本关所需的资源
-    //preload->running();
     firstEnterFlag = 2;
+    GamePage::running();
     step = PRELOADING;
     break;
   case PRELOADING:
     preLoad();
+    GamePage::running();
     step = PRELOAD_END;
     break;  
   case PRELOAD_END:
-    step = GAME_WAIT;
+    GamePage::running();
+    step = GAME_LOADING;
     break;
+  case GAME_LOADING:
+  case GAME_GETBIRD:
   case GAME_WAIT:
+  case GAME_SCROLL:
+  case GAME_PAUSE:
+  case GAME_OVER:
+  case GAME_END:
+    GamePage::running();
+    world->Step(1.0f/20.0f,20,10);
+    break;
   case GAME_RUNING:
     GamePage::running();
     world->Step(1.0f/20.0f,20,10);
@@ -139,33 +169,43 @@ void Session1::onPaint()
   switch(step)
   {
   case PRELOAD:  ///在预加载时显示预加载页面
+    firstEnterFlag = 2; ///加蒙层
+    break;
   case PRELOADING:
-    firstEnterFlag = 2;
-    //preload->onPaint();
     break;
-  case PRELOAD_END: ///预加载期结束,(删除预加载页面资源?)
-    //SafeDelete(preload);
-    firstEnterFlag = 2;
+  case PRELOAD_END: ///预加载期结束
+    gPaintStatus=false;//session中修改
+    firstEnterFlag = 0; ///去掉蒙层
     break;
+  case GAME_LOADING:
+  case GAME_GETBIRD:
+  case GAME_SCROLL:
+  case GAME_PAUSE:
+  case GAME_OVER:
+  case GAME_END:
   case GAME_WAIT:     ///在游戏中加载游戏页面
   {
-    gpDC->drawImage((JImage*)GETIMG(ID_background), 0, GamePage::SCREEN_SHIFT_Y, 20);
+    //gpDC->drawImage((JImage*)GETIMG(ID_background), 0, GamePage::SCREEN_SHIFT_Y, 20);
     GamePage::onPaint();
 
+    /*
     uint32 flags = 0;
     flags += b2Draw::e_shapeBit;
     ab.SetFlags(flags);
     world->DrawDebugData();
+    */
     break;
   }
   case GAME_RUNING: ///飞行中,不接受抓鸟控制
-    gpDC->drawImage((JImage*)GETIMG(ID_background), 0, GamePage::SCREEN_SHIFT_Y, 20);
+    //gpDC->drawImage((JImage*)GETIMG(ID_background), 0, GamePage::SCREEN_SHIFT_Y, 20);
     GamePage::onPaint();
 
+    /*
     uint32 flags = 0;
     flags += b2Draw::e_shapeBit;
     ab.SetFlags(flags);
     world->DrawDebugData();
+    */
     break;
   }
 }
@@ -173,10 +213,12 @@ void Session1::onPaint()
 int Session1::createWorld()
 {
   world->SetDebugDraw(&ab);
-  addWall(world, 200, 720, -200,240);
-  initBlock(world, nFloorNum1, nFloorList, SCREEN_SHIFT_Y, nBlockNum, 
-            nBlockList, objectDataList, objectNum, s_controllable, this, 0);
+  //addWall(world, 200, 720, -200,240);
+  initBlock(world, nFloorNum, nFloorList, nBlockNum, 
+            nBlockList, objectDataList, objectNum, s_controllable, this, 300);
 
+  initBlock(world, nBirdFloorNum, nBirdFloorList, nBirdNum, 
+            nBirdList, objectDataList, objectNum, s_controllable, this, 0);
   return 0;
 }
 //}

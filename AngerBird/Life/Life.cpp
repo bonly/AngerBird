@@ -13,7 +13,7 @@
 
 Life::Life()
 {
-  status = ~s_pickAble & s_waiting ;
+  status = ~s_pickAble & s_jumpAble ;
 }
 
 Life::~Life()

@@ -32,12 +32,13 @@ class Life
 	  enum
 	  {
 		  s_pickAble				= 0x0001,	///< 可抓取
-		  s_waiting 				= 0x0002,	///< 上叉前等待中
+		  s_jumpAble 				= 0x0002,	///< 上叉前等待中
 		  s_flying  				= 0x0004,	///< 飞行中
       s_eyes            = 0x0008, ///< 能眨眼
       s_crash           = 0x0010, ///< 碰撞了
       s_clound          = 0x0020, ///< 变云消失
-      s_flip            = 0x0040  ///< 打筋斗
+      s_flip            = 0x0040, ///< 打筋斗
+      s_getReady         = 0x0080 ///< 上弹弓
 	  };
     int status;
 

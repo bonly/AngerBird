@@ -102,6 +102,7 @@ float getPixNum(float num);
 #define M2P(X) getPixNum(X)
 #define SHIFT  GamePage::SCREEN_SHIFT_Y
 
+int convRotAngle(int angle);
 float32 sin2oc(float32);
 //} /* namespace NBird */
 #endif /* PRE_H_ */

@@ -55,4 +55,13 @@ float32 sin2oc(float32 sinv)
   float32 res = sinv*(180.f/b2_pi);
   return ceill(res);
 }
+
+int convRotAngle(int angle)
+{
+	if (angle < 0)
+		angle = (-angle)*2 + angle;
+	else
+		angle = 360-angle;
+	return angle;
+}
 //} /* namespace NBird */

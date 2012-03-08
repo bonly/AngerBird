@@ -19,15 +19,15 @@
 
 #define BIRD_DENSITY 1.0f					//鸟
 #define BIRD_FRICTION 3.0f	
-#define BIRD_RESTITION 0.8f  
+#define BIRD_RESTITION 0.1f  
 	
 #define PIG_DENSITY 1.0f						//猪属性
 #define PIG_FRICTION 10.0f	
 #define PIG_RESTITION 0.1f	//0.1
 
-#define FLOOR_DENSITY 0					//地面属性
+#define FLOOR_DENSITY 2.f					//地面属性
 #define FLOOR_FRICTION 10.0f	
-#define FLOOR_RESTITION 0.5f   //0.5
+#define FLOOR_RESTITION 0.1f   //0.5
 //////////////////////////////////////////////////////////////////////物体生命值定义
 #define PIG_CROWN_PH  1
 #define PIG_BEARD_PH  1
@@ -133,15 +133,13 @@ enum _FIXTURE_TYPE
 	FIXTURE_PIG,  //猪
 	FIXTURE_BIRD, //鸟
 	FIXTURE_ICE,//冰
-	FIXTURE_STONE, //石头
-  //FIXTURE_REDBIRD, //红鸟
+	FIXTURE_STONE //石头
 };
 enum _SHAPE_TYPE
-{
+{	
 	SHAPE_L_TIP=0,	//长条
 	SHAPE_M_TIP,	//中条
 	SHAPE_S_TIP,	//短条
-  //SHAPE_B_REDBIRD, //红鸟
 	SHAPE_L_SQU,    //大正方形中空
 	SHAPE_M_SQU,	//中正方形
 	SHAPE_S_SQU,	//小正方形
@@ -158,15 +156,19 @@ enum _SHAPE_TYPE
 	SHAPE_L_PIG,    
 	SHAPE_M_PIG,
 	SHAPE_S_PIG,//6种猪
-	
+	//
 	SHAPE_FLOOR_POLY,  //地面
 	SHAPE_B_TIP,
 	//
-	SHAPE_RED_BIRD,
+	SHAPE_WHEEL,  //车轮
+	SHAPE_TNT,   //炸弹
+	//
+	SHAPE_RED_BIRD,   //鸟
+	SHAPE_SPEED_BIRD,
 	SHAPE_THREE_BIRD,
 	SHAPE_BOMB_BIRD,
 	SHAPE_EGG_BIRD,
-	SHAPE_SPEED_BIRD
+	SHAPE_YA_BIRD
 	//
 };
 

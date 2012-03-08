@@ -6,7 +6,7 @@
 
 int pageGravityFlag=1;  //当前页重力开关,默认打开
 
-void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],int SCREEN_SHIFT_Y,
+void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],
                int& nBlockNum, int nBlockList[][8],TObjectData* objectDataList,int& objectNum,
                TObjectData** controllable, GamePage* page, int screenMovey)
 {
@@ -23,10 +23,8 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],int SCREEN_SH
 		myObject.objectShapeType=SHAPE_FLOOR_POLY;
 		myObject.shapeType=SHAPE_POLY;
 		myObject.polyLines=nFloorList[i][4];
-		if (nFloorList[i][0] == 1)
-			shiftnum = screenMovey;
-		myObject.x=getWorldNum(nFloorList[i][2]+shiftnum); ///X位置
-		myObject.y=getWorldNum(nFloorList[i][3]+shiftnum); ///Y位置
+		myObject.x=getWorldNum(nFloorList[i][2]+FLOOR_LEVEL_X); ///X位置
+		myObject.y=getWorldNum(nFloorList[i][3]+screenMovey); ///Y位置
 		myObject.angle=0;
 		myObject.no = -1;
 		myObject.dynamicFlag=0;
@@ -96,14 +94,11 @@ void analyseBlock(TObject *myObject,  float block[5], GamePage* page, int screen
 {
 		myObject->objectfixture=block[0];  ///类型
 		myObject->objectShapeType=block[1]; ///型状
-		myObject->x=getWorldNum(block[2]);		///x
+		myObject->x=getWorldNum(block[2] + FLOOR_LEVEL_X);		///x
+		//      //不是鸟要偏移
+			myObject->y=getWorldNum(block[3]+screenMovey);  ///
 		//
-		if (myObject->objectShapeType != FIXTURE_BIRD)         //不是鸟要偏移
-			myObject->y=getWorldNum(block[3]+screenMovey);  ///Y
-		else
-			myObject->y=getWorldNum(block[3]);
-		//
-		myObject->angle=getAngle(block[4]);   ///角度
+		myObject->angle=block[4];   ///角度
 		myObject->dynamicFlag=1;
 		//
 		switch(myObject->objectfixture)
@@ -314,19 +309,24 @@ void addObject(b2World *world, TObject *object,TObjectData* objectDataList,int& 
 	}else
 	{
 
-		b2Vec2 *mm;
-		int num=0; 
-		mm= (b2Vec2 *) SafeMalloc(3 * sizeof(struct b2Vec2));
-		for (i=0; i<3; i++)
-			mm[i].Set(object->data[num++], object->data[num++]);
-		polygonShape.Set(mm, 3);
-		myfixture.shape=&polygonShape;
-		SafeDelete(mm);
+    b2Vec2 *mm;
+    int num=0; 
+    mm= (b2Vec2 *) SafeMalloc(object->polyLines * sizeof(struct b2Vec2));
+    for (i=0; i<object->polyLines; i++)
+    {
+	    mm[i].Set(object->data[num], object->data[num+1]);
+	    num = num + 2;
+    }
+    polygonShape.Set(mm, object->polyLines);
+    myfixture.shape=&polygonShape;
+    SafeDelete(mm);
+
 	}
 
 	//
 	b2Body *B2Object=world->CreateBody(&bodyDef);   //在body里组装很多形状  都是通过b2Body.CreateFixture(b2FixtureDef)来确定
 	B2Object->CreateFixture(&myfixture);
+  if(objectDataList[objectNum].life != 0)
     objectDataList[objectNum].life->body = B2Object;
 	objectNum++;
 }

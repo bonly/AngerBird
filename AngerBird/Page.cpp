@@ -16,8 +16,8 @@
 //#include "basescreen.h"
 
 //namespace NBird {
-int testx = 65;
-int testy= 65;
+//int testx= 65;
+//int testy= 65;
 
 int GamePage::SCREEN_SHIFT_Y = 0;
 extern bool gPaintStatus;
@@ -59,8 +59,6 @@ ControlPage::~ControlPage()
 
 GamePage::GamePage():lastY(0),controllable(0),controlled(0)
 {
-	step=GAME_LOADING;
-	slingy=100;
 }
 
 GamePage::~GamePage()
@@ -97,8 +95,11 @@ int GamePage::init()
   world->SetContactListener(contact);
   contact_filter = SafeNew ContactFilter;
   world->SetContactFilter(contact_filter);
+  idxControl = -1;
  
   slingx += FLOOR_LEVEL_X;  //弹工位置
+  //slingx = 120;
+  slingy = 100;  //弹工坐标
   return 0;
 }
 
@@ -216,10 +217,10 @@ void GamePage::drawSlingLine(int birdx, int birdy)
 				birdx = x[0] + cx;
 			birdy=y[0] - cy;
 			cutx = abs(birdx-x[i]);
-		    cuty = abs(birdy-y[i]);
+		  cuty = abs(birdy-y[i]);
 			sina = (float32)cuty/(float32)distance;
-		    cosa = (float32)cutx/(float32)distance;
-		    oc = ceill(sina * (180.f/b2_pi));
+		  cosa = (float32)cutx/(float32)distance;
+		  oc = ceill(sina * (180.f/b2_pi));
 			//
 			//
 		
@@ -256,36 +257,21 @@ void GamePage::onPaint()
   switch(step)
   {
   case GAME_LOADING:
-	  imgRope[0]=GETIMG(ID_rope1);
-	  imgRope[1]=GETIMG(ID_rope2);
-	  imgRope[2]=GETIMG(ID_rope3);
-	  imgBg=GETIMG(ID_background);
-	  imgExtra=GETIMG(ID_birdbg_extern);
-	  imgGrass=GETIMG(ID_birdbg_grass);
-	  imgBird[0]= GETIMG(ID_bird_red_1);
-	  imgBird[1]= GETIMG(ID_bird_addspeed_1);
-	  imgBird[2]= GETIMG(ID_bird_three_1);
-	  imgBird[3]= GETIMG(ID_bird_bomb_1);
-	  imgBird[4]= GETIMG(ID_bird_egg_1);
-	  imgSling= GETIMG(ID_sling);
-	  //创建世界物体
-	  addWall(world, FLOOR_LEVEL_X, 1500, 0,240);
-	  //
-	  step=GAME_WAIT;
-	  gPaintStatus=false;//session中修改
 	  break;
   case GAME_WAIT:
+  case GAME_GETBIRD:
+  case GAME_SCROLL:
+  case GAME_PAUSE:
+  case GAME_OVER:
+  case GAME_END:
+  case GAME_RUNING:
     //SCREEN_SHIFT_Y=SCREEN_SHIFT_Y-2;
     //SCREEN_SHIFT_X=SCREEN_SHIFT_X-2;
     drawGameBg();
-
-    //drawSlingLine(controlled->life->body);
-
-    //controlled->life->body->SetTransform(b2Vec2(
-    drawSlingLine(testx, testy);
     gpDC->drawImage(imgSling, slingx, slingy, 20);   //画弹工
     //最后画青草
     drawGrass();
+    break;
   }
 
   DrawData();
@@ -303,21 +289,102 @@ void GamePage::onPaint()
   
 void GamePage::running()
 {
+  switch(step)
+  {
+    case PRELOAD:
+      break;
+    case PRELOADING:
+      imgRope[0]=GETIMG(ID_rope1);
+	    imgRope[1]=GETIMG(ID_rope2);
+	    imgRope[2]=GETIMG(ID_rope3);
+	    imgExtra=GETIMG(ID_birdbg_extern);
+	    imgBird[0]= GETIMG(ID_bird_red_1);
+	    imgBird[1]= GETIMG(ID_bird_addspeed_1);
+	    imgBird[2]= GETIMG(ID_bird_three_1);
+	    imgBird[3]= GETIMG(ID_bird_bomb_1);
+	    imgBird[4]= GETIMG(ID_bird_egg_1);
+	    imgSling= GETIMG(ID_sling);  
+      slingX = slingx + imgSling->getWidth(); ///设置弹弓的受力点位置
+      slingY = slingy + imgSling->getHeight()/2; 
+
+	    //创建世界物体
+	    addWall(world, FLOOR_LEVEL_X, 1500, 0,240);
+      break;
+    case PRELOAD_END: ///预加载期结束
+      break;
+    case GAME_LOADING:
+      step = GAME_GETBIRD;
+      break;
+    case GAME_GETBIRD:
+      if(getBird())
+      {
+        controlled->life->status &= ~Life::s_jumpAble;///修改状态,不再跳动
+        controlled->life->status |= Life::s_getReady; ///修改状态,准备
+        int x = M2P(controlled->life->body->GetPosition().x);
+        int y = M2P(controlled->life->body->GetPosition().y);
+        if(JumpLine(x, y, slingX, slingY, 10) == true)
+        {
+          step = GAME_WAIT;
+          controlled->life->status &= ~Life::s_getReady; ///准备好了,不要这个标示位
+        }
+        else  ///移动鸟位
+        {
+          controlled->life->body->SetTransform(b2Vec2(P2M(x),P2M(y)),0);
+        }
+      }
+      else ///没有鸟了
+      {
+        step = GAME_OVER;
+      }
+      break;
+    case GAME_WAIT:
+      if (controlled == 0)
+      {
+        step = GAME_GETBIRD;
+        break;
+      }
+      break;
+    case GAME_SCROLL:
+    case GAME_PAUSE:
+    case GAME_RUNING: ///飞行中
+    case GAME_OVER:  ///算成绩,显示成绩单
+    case GAME_END: ///切换到下个页面
+      break;
+  }
   deleteObj(); ///删除小鸟或已破的物体
   return;
 }
 
+bool GamePage::getBird()
+{
+    if (controlled == 0)
+    {
+      for(int i=0; i<10; ++i) ///取可用的小鸟
+      {
+        if(controllable[i] != 0 && controllable[i]->life !=0)
+        {
+          controlled = controllable[i];
+          return true;
+        }
+      }
+    }
+    else
+      return true;
+    return false;
+}
 void GamePage::deleteObj()
 {
-  if (controlled && (!controlled->life->body->IsAwake())) ///控制中的小鸟已静止
+  if (controlled && ((!controlled->life->body->IsAwake()))) ///控制中的小鸟已静止
   {
     if(controlled->life->status & controlled->life->s_crash) ///碰撞完静止了
-      controlled->life->status = controlled->life->s_clound; ///变云
+      controlled->life->status = controlled->life->s_clound; ///变云消失
     else
     {
       world->DestroyBody(controlled->life->body);
       controlled->life->body = 0;
+      SafeDelete(controlled->life);
       controlled = 0;
+      step = GAME_GETBIRD;
     }
   }
   for (int i=0; i<ARRMAX; ++i)
@@ -334,13 +401,14 @@ void GamePage::DrawData()
 {
   for (b2Body *cBody = world->GetBodyList(); cBody; cBody = cBody->GetNext()) 
   {
-     if(TObjectData* obj = (TObjectData*)cBody->GetUserData())
+    if(TObjectData* obj = (TObjectData*)cBody->GetUserData() )
      {
-        obj->life->Draw(obj);
+        if(obj->life != 0)
+          obj->life->Draw(obj);
         if (controlled != 0)
         {
-          //drawSlingLinePic(63, 87, controlled->life->body);
-          //drawSlingLinePic(67, 104, controlled->life->body);
+          if (!(controlled->life->status & Life::s_getReady) && !(controlled->life->status & Life::s_flying))
+            drawSlingLine(M2P(controlled->life->body->GetPosition().x), M2P(controlled->life->body->GetPosition().y));
         }
      }
   }
@@ -368,7 +436,8 @@ bool GamePage::OnPointerPressed(int x, int y)
         if (InButtonPic(x, y, 0, SHIFT, rc) == 1 && (controllable[i]->life->status & Life::s_pickAble) == true)
         {
             controlled = controllable[i];
-            controlled->life->status &= ~Life::s_waiting;
+            controlled->life->status &= ~Life::s_jumpAble;
+            idxControl = i;
             break;
         }
         ++i;
@@ -406,9 +475,6 @@ bool GamePage::OnPointerDragged(int x, int y)
             ps.x = P2M(x);
             ps.y = P2M(y);
             controlled->life->body->SetTransform(ps, 0);
-            //drawSlingLine(63, 87, 67, 104, controlled->life->body); 
-            //drawSlingLinePic(63, 87, controlled->life->body);
-            //drawSlingLinePic(67, 104, controlled->life->body);
           }
         }
         else
@@ -480,7 +546,7 @@ bool GamePage::OnPointerReleased(int x, int y)
                                        -distance * sin(birdAngle)/4.0f);
             controlled->life->body->SetLinearVelocity(birdStrlen);
 
-            controlled->life->status &= ~controlled->life->s_pickAble & ~controlled->life->s_waiting;
+            controlled->life->status &= ~controlled->life->s_pickAble & ~controlled->life->s_jumpAble;
             controlled->life->status |= controlled->life->s_flying;
             //controlled = 0;
             step = GAME_RUNING;
@@ -522,6 +588,22 @@ void GamePage::getScreenMove()
 
 }
 
+/**
+ * @取跳上弹弓的路线点
+ * @param inv 步长
+ * @return true:完成  false:还未到目的地
+ */
+bool GamePage::JumpLine(int &x, int &y, const int tx, const int ty, const int inv)
+{
+    if (x == tx && y == ty)  ///考虑到onPaint是后面调,此处在画完上一动作后处理,以延迟判断时机
+       return true;
+    if (x !=tx )
+      ((x+=inv)>=tx)?x=tx : x;
+    if (y !=ty )
+      ((y+=inv)>=ty)?y=ty : y;
+    
+    return false;
+}
 
 /**
  * @brief 加入要删除的物体,在下一个step前从物理世界中删除

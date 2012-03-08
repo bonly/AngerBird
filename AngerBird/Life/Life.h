@@ -36,7 +36,8 @@ class Life
 		  s_flying  				= 0x0004,	///< 飞行中
       s_eyes            = 0x0008, ///< 能眨眼
       s_crash           = 0x0010, ///< 碰撞了
-      s_clound          = 0x0020  ///< 变云消失
+      s_clound          = 0x0020, ///< 变云消失
+      s_flip            = 0x0040  ///< 打筋斗
 	  };
     int status;
 

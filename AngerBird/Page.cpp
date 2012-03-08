@@ -464,6 +464,7 @@ bool GamePage::OnPointerReleased(int x, int y)
           rc.y = controlled->life->y - rc.height/2;
           if (InButtonPic(x, y, 0, SHIFT, rc) == 1 && (controlled->life->status & Life::s_pickAble) == true)
           {
+            controlled->life->body->GetFixtureList()->SetRestitution(BIRD_RESTITION);
             controlled->life->body->SetActive(true);
             //b2Vec2 rc;
             //rc.x = x;

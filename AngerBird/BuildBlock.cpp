@@ -25,8 +25,8 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],int SCREEN_SH
 		myObject.polyLines=nFloorList[i][4];
 		if (nFloorList[i][0] == 1)
 			shiftnum = screenMovey;
-		myObject.x=getWorldNum(nFloorList[i][2]+shiftnum);
-		myObject.y=getWorldNum(nFloorList[i][3]+shiftnum);
+		myObject.x=getWorldNum(nFloorList[i][2]+shiftnum); ///X位置
+		myObject.y=getWorldNum(nFloorList[i][3]+shiftnum); ///Y位置
 		myObject.angle=0;
 		myObject.no = -1;
 		myObject.dynamicFlag=0;
@@ -48,24 +48,24 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],int SCREEN_SH
 	for (i=0; i< nBlockNum; i++)
 	{
 		TObject myObject;	
-		myObject.no = nBlockList[i][1];
+    myObject.no = nBlockList[i][1]; ///位1:记录号
 		float data[5];
 		//
-		if (nBlockList[i][0] == 1)  //add
+    if (nBlockList[i][0] == 1)  ///位0:增加操作
 		{
 			int m;
 			for (m=0; m < 5; m++)
-				data[m]=nBlockList[i][m+3];
-			analyseBlock(&myObject, data, page, screenMovey);
-			addObject(world, &myObject, objectDataList,objectNum,controllable);
-		}else  if (nBlockList[i][0] == 0)  //删除掉那个物体
+				data[m]=nBlockList[i][m+3]; ///取位3开始的5位数据
+			analyseBlock(&myObject, data, page, screenMovey); ///分析构建定义
+			addObject(world, &myObject, objectDataList,objectNum,controllable); ///加入物体到物理世界
+    }else  if (nBlockList[i][0] == 0)  ///位0:删除操作,删除掉那个物体
 		{
 			for (b2Body *currentBody=world->GetBodyList(); currentBody; currentBody=currentBody->GetNext()) 
 			{
 				if(currentBody->GetUserData()) 
 				{
-					TObjectData *curr = (TObjectData *) currentBody->GetUserData();
-					 if (curr->no== nBlockList[i][1]) 
+					 TObjectData *curr = (TObjectData *) currentBody->GetUserData();
+					 if (curr->no == nBlockList[i][1]) ///删除与用户数据中匹配记号的物件
 					 {
 						 world->DestroyBody(currentBody);
 						 break;
@@ -82,7 +82,7 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],int SCREEN_SH
 		{
 			int n;
 			float32 timeStep = 1.0f /20.0f; 
-			int num=nBlockList[i][2];
+			int num=nBlockList[i][2]; ///模拟等待步数
 		
 			for (n=0; n < num; n++)
 			{
@@ -94,16 +94,16 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],int SCREEN_SH
 
 void analyseBlock(TObject *myObject,  float block[5], GamePage* page, int screenMovey)
 {
-		myObject->objectfixture=block[0];
-		myObject->objectShapeType=block[1];
-		myObject->x=getWorldNum(block[2]);		
+		myObject->objectfixture=block[0];  ///类型
+		myObject->objectShapeType=block[1]; ///型状
+		myObject->x=getWorldNum(block[2]);		///x
 		//
 		if (myObject->objectShapeType != FIXTURE_BIRD)         //不是鸟要偏移
-			myObject->y=getWorldNum(block[3]+screenMovey);
+			myObject->y=getWorldNum(block[3]+screenMovey);  ///Y
 		else
 			myObject->y=getWorldNum(block[3]);
 		//
-		myObject->angle=getAngle(block[4]);
+		myObject->angle=getAngle(block[4]);   ///角度
 		myObject->dynamicFlag=1;
 		//
 		switch(myObject->objectfixture)
@@ -461,7 +461,7 @@ void  addWall(b2World* world,int w, int h, int px, int py)
   b2FixtureDef floorFixture;
   floorFixture.density=0;
   floorFixture.friction=10;
-  floorFixture.restitution=0.3;   //弹性
+  floorFixture.restitution=0.f;   //弹性
   floorFixture.shape=&floorShape;
 
   //

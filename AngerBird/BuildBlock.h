@@ -25,7 +25,7 @@ typedef struct _object
 	float angle; //初始角度
 	int polyLines;  //多边形条数
 	float data[16];  //其它数据   矩形->长宽  圆形->半径  多边形(最多四边，四个角相对坐标, 三角形存储三个角)
-    Life *life;
+  Life *life;
 }TObject;
 
 typedef struct _Object_Data

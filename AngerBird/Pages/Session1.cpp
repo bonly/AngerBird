@@ -18,8 +18,20 @@
 //#define SCREEN_SHIFT_Y 0
 //活动物体列表
 //定义一个活动物体数量
-static int nBlockNum=17;
+
+/**
+ * 0: 1增加 0删除
+ * 1: 所删除物件的记号num
+ * 2: 模拟等待步数
+ * 3: objectfixture
+ * 4: objectShapeType
+ * 5: x
+ * 6: y
+ * 7: 角度
+ */
+static int nBlockNum=1;
 static int nBlockList[][8]={ 
+  {1,0,0,FIXTURE_BIRD,SHAPE_RED_BIRD,20,100,0},
 {1,1,11,1,2,32,66,0},
 {1,2,7,1,2,32,169,0},
 {1,3,7,1,0,53,89,0},

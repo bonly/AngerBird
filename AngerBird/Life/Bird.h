@@ -23,6 +23,7 @@ public:
 public:
   int bird[2]; 
   int dt; ///当前时间间隔计算
+  int flip_angle; ///筋斗的角度
 };
 
 //}

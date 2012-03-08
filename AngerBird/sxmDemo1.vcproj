@@ -56,7 +56,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sxmFixFont.lib sxmHttp.lib sxmInput.lib sxmjlib.lib E:\AngerBird\AngerBird\box2d.a"
+				AdditionalDependencies="sxmFixFont.lib sxmHttp.lib sxmInput.lib sxmjlib.lib"
 				OutputFile="$(SXMEMU)/WIN32FS/DRIVE_E/apple/test/test.bin"
 				AdditionalLibraryDirectories="./;&quot;$(BREWDIR)/sxmsdk&quot;"
 				IgnoreDefaultLibraryNames="MSVCRTD.lib;libc.lib"

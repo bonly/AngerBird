@@ -21,7 +21,10 @@ JImage* Bird::GetStatusPiC(TObjectData *)
 
   if (dt%40==0 && Life::status & s_waiting) ///原地跳动
   {
+    Life::status |= s_flip;
+    body->GetFixtureList()->SetRestitution(0.f);
     body->SetActive(true);
+
     //body->ApplyForce(b2Vec2(100,0), body->GetWorldCenter());
     body->ApplyForceToCenter(b2Vec2(100.f * body->GetMass(), 0.f));
     //body->SetLinearVelocity(b2Vec2(4.f,0.f));
@@ -44,7 +47,18 @@ void Bird::Draw(TObjectData *status)
   JImage *pic = GetStatusPiC(status);
   if (pic==0) return;
 
-  float32 angle = sin2oc(body->GetAngle());
+  if (Life::status & s_flip)
+  {
+    flip_angle += 45;
+    if (flip_angle >= 360)
+    {
+      Life::status &= ~s_flip;
+      flip_angle = 0;
+    }
+    //body->ApplyTorque(flip_angle);
+    body->SetTransform(b2Vec2(body->GetPosition().x, body->GetPosition().y), flip_angle);
+  }
+  int angle = sin2oc(body->GetAngle());
 
   ///渲染
   x = M2P(body->GetPosition().x);
@@ -54,7 +68,7 @@ void Bird::Draw(TObjectData *status)
     y - pic->getHeight()/2 + SHIFT, 20, angle);
 }
 
-Bird::Bird()
+Bird::Bird():flip_angle(0)
 {
 }
 
@@ -72,6 +86,13 @@ bool Bird::ShouldCollide(TObjectData *other)
 void Bird::BeginContact(b2Contact* contact)
 {
   status |= s_crash;
+  if ((Life::status & s_flip) && (contact->GetFixtureA()->GetBody()->GetType()==b2_staticBody)) ///与地面相撞
+  {
+      Life::status &= ~s_flip;
+      flip_angle = 0;
+      //body->ApplyTorque(flip_angle);
+      body->SetTransform(b2Vec2(body->GetPosition().x, body->GetPosition().y), flip_angle);
+  }
 }
 
 void Bird::EndContact(b2Contact* contact)

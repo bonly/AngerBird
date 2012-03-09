@@ -109,42 +109,42 @@ void drawLayer()
 
 int CAPageScreen::OnPaint(void* pi)
 {
-    //STEP 4: 游戏的主逻辑可放在这里
-    //完成每帧的绘制
-    //测试代码只是刷成黑色(清屏)
+  //STEP 4: 游戏的主逻辑可放在这里
+  //完成每帧的绘制
+  //测试代码只是刷成黑色(清屏)
 
-    if (!m_bVisible)    return 0;
+  if (!m_bVisible)    return 0;
 
-    int idx = task->get_current_page();
-	if (lastPageIdx != idx)
-	{
-		if (idx == 1)
-			firstEnterFlag=2;
-		//
-		if (firstEnterFlag == 0)
-		{
-			if (firstPageShowTimes++ == LOG_SHOW_TIMES)
-				firstEnterFlag=1;
-			gpDC->setColor(0);
-			gpDC->clearScreen();
-			gpDC->drawImage(imgFirstLoading, 0, 0, 20);
-			return 0;
-		}
-		if (firstEnterFlag == 2)
-			drawLayer();
-		//
-		gPaintStatus=true;
-		lastPageIdx=idx;
-		
+  int idx = task->get_current_page();
+  if (lastPageIdx != idx)
+  {
+    if (idx == 1)
+	    firstEnterFlag=2;
+    //
+    if (firstEnterFlag == 0)
+    {
+	    if (firstPageShowTimes++ == LOG_SHOW_TIMES)
+		    firstEnterFlag=1;
+	    gpDC->setColor(0);
+	    gpDC->clearScreen();
+	    gpDC->drawImage(imgFirstLoading, 0, 0, 20);
+	    return 0;
+    }
+    if (firstEnterFlag == 2)
+	    drawLayer();
+    //
+    gPaintStatus=true;
+    lastPageIdx=idx;
+  	
 
-		return 0;
-	}
-	if (gPaintStatus==false)   
-	{
-		gpDC->setColor(0);
-		gpDC->clearScreen();
-	}
-	
+	  return 0;
+  }
+  if (gPaintStatus==false)   
+  {
+	  gpDC->setColor(0);
+	  gpDC->clearScreen();
+  }
+
   if(task->list[idx].page != 0)
   {
     task->list[idx].page->onPaint();
@@ -178,6 +178,7 @@ void CAPageScreen::OnTimer(void)
       {
         if (task->list[idx].page == 0)
         {
+          firstEnterFlag = 2;///加载等待蒙层
           ///创建并初始化页面
           task->list[idx].page = task->list[idx].creatFcn();
           task->list[idx].page->init();

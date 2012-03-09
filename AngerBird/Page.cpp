@@ -389,7 +389,8 @@ void GamePage::deleteObj()
   if (controlled) ///控制中的小鸟已静止
   {
     b2Vec2 vl = controlled->life->body->GetLinearVelocity();
-    if ((abs(vl.x) <= 0.002f) && (abs(vl.y) <= 0.002f))
+    printf("x=%lf y=%lf\n",vl.x,vl.y);
+    if ((abs(vl.x) <= 0.01f) && (abs(vl.y) <= 1.7f))
     {
       if(controlled->life->status & Life::s_crash) ///碰撞完静止了
       {

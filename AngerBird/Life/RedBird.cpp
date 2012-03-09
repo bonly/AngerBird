@@ -37,7 +37,7 @@ RedBird::RedBird()
   //width = S_REDBIRD_WIDTH;
   //height = S_REDBIRD_HEIGHT;
   width = BIRD_RED_RADIUS * 2.f;
-  height = S_REDBIRD_HEIGHT * 2.f;
+  height = BIRD_RED_RADIUS * 2.f;
 
 }
 

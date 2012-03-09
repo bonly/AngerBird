@@ -61,7 +61,7 @@ static int nFloorList[][21]={
 
 
 //////////////////////////////////
-static int nBirdNum=1;
+static int nBirdNum=4;
 static int nBirdList[][8]={ 
 {1,0,7,3,21,12,170,0},
 {1,1,16,3,21,12,195,0},
@@ -83,6 +83,7 @@ extern int firstEnterFlag;
 Session1::Session1(void)
 {
   step = PRELOAD;
+  objectNum = 0;///密须重置一次,防止重载此页时值累加
 }
 
 Session1::~Session1(void)

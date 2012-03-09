@@ -3,7 +3,7 @@
 #define _YM_480
 ////////////////////////////////////////////////////////////鸟速度小于多少会爆掉
 #define BIRD_PLOSION_SPEED 1
-#define MAX_OBJECTS 20
+#define MAX_OBJECTS 200
 //////////////////////////////////////////////////////////////////////物体属性定义
 #define WOOD_DENSITY 1.2f				//木头
 #define WOOD_FRICTION 15.0f
@@ -18,15 +18,15 @@
 #define STONE_RESTITION 0.1f
 
 #define BIRD_DENSITY 1.0f					//鸟
-#define BIRD_FRICTION 3.0f	
+#define BIRD_FRICTION 13.0f	
 #define BIRD_RESTITION 0.1f  
 	
 #define PIG_DENSITY 1.0f						//猪属性
 #define PIG_FRICTION 10.0f	
 #define PIG_RESTITION 0.1f	//0.1
 
-#define FLOOR_DENSITY 2.f					//地面属性
-#define FLOOR_FRICTION 10.0f	
+#define FLOOR_DENSITY 0.f					//地面属性
+#define FLOOR_FRICTION 15.0f	
 #define FLOOR_RESTITION 0.1f   //0.5
 //////////////////////////////////////////////////////////////////////物体生命值定义
 #define PIG_CROWN_PH  1

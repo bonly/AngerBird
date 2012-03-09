@@ -61,7 +61,7 @@ static int nFloorList[][21]={
 
 
 //////////////////////////////////
-static int nBirdNum=4;
+static int nBirdNum=1;
 static int nBirdList[][8]={ 
 {1,0,7,3,21,12,170,0},
 {1,1,16,3,21,12,195,0},
@@ -95,9 +95,8 @@ void Session1::onDestory()
   //SafeDelete(preload);
   for (int i = 0; i < objectNum; ++i)
   {
-    SafeDelete(objectDataList[i].life);
+     SafeDelete(objectDataList[i].life);
   }
-
 }
 int Session1::init()
 {
@@ -151,13 +150,13 @@ void Session1::running()
   case GAME_GETBIRD:
   case GAME_WAIT:
   case GAME_SCROLL:
-  case GAME_PAUSE:
-  case GAME_OVER:
-  case GAME_END:
+  case GAME_RUNING:
     GamePage::running();
     world->Step(1.0f/20.0f,20,10);
     break;
-  case GAME_RUNING:
+  case GAME_PAUSE:
+  case GAME_OVER:
+  case GAME_END:
     GamePage::running();
     world->Step(1.0f/20.0f,20,10);
     break;

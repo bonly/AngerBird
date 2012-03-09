@@ -158,7 +158,7 @@ void CAPageScreen::OnTimer(void)
   
   switch(task->step)
   {
-    case task->NEXT_PAGE:
+    case Tasks::NEXT_PAGE:
     {
       if (task->list[idx].page != 0)///先删除旧页
       {
@@ -172,7 +172,7 @@ void CAPageScreen::OnTimer(void)
       }
       task->step = task->CURRENT_PAGE;
     }
-    case task->CURRENT_PAGE:
+    case Tasks::CURRENT_PAGE:
     {
       if (task->list[idx].creatFcn != 0)
       {
@@ -203,7 +203,7 @@ void CAPageScreen::OnTimer(void)
   //类似于JAVA的  thread:sleep操作
   //限制在30FPS以下， 如果当前时间小于30MS， 计算SLEEP时间
   //如果游戏比较简单，或者追求速度， 只要SetTimer(5)就好了
-  SetTimer(200);   
+  SetTimer(1);   
 }
 
 BOOL CAPageScreen::OnSuspend()

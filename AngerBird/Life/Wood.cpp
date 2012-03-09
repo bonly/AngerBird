@@ -39,7 +39,7 @@ void Wood::Draw(TObjectData *status)
   TObjectData* stat = (TObjectData*)body->GetUserData();
   if (PH <= 0) 
   {
-     gpage->push_del(this->body); ///删除物体
+    gpage->push_del(this->body); ///删除物体
   }
   if (PH <= stat->PH/2.f)
   {
@@ -53,8 +53,8 @@ void Wood::Draw(TObjectData *status)
 
   JImage *pic = GETIMG(*pic_idx);
   gpDC->drawImageWithRotate(pic, 
-    M2P(body->GetPosition().x) - pic->getWidth()/2, 
-    M2P(body->GetPosition().y) - pic->getHeight()/2 + SHIFT, 20, angle);
+    M2P(body->GetPosition().x), 
+    M2P(body->GetPosition().y) + SHIFT, ACHOR_HV, angle);
 }
 
 Wood::Wood()
@@ -93,7 +93,7 @@ bool Wood::ShouldCollide(TObjectData *other)
 
 void Wood::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
 {
-  printf("木的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
+  //printf("木的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
   TObjectData* stat = (TObjectData*)body->GetUserData();
   PH = stat->PH - impulse->normalImpulses[0];
 }

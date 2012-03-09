@@ -104,5 +104,11 @@ float getPixNum(float num);
 
 int convRotAngle(int angle);
 float32 sin2oc(float32);
+
+#ifndef _WIN32
+#define sqrtl sqrt
+#define ceill ceil
+#endif
+
 //} /* namespace NBird */
 #endif /* PRE_H_ */

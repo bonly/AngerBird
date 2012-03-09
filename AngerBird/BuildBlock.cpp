@@ -46,6 +46,7 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],
 	for (i=0; i< nBlockNum; i++)
 	{
 		TObject myObject;	
+    myObject.life = 0;
     myObject.no = nBlockList[i][1]; ///位1:记录号
 		float data[5];
 		//
@@ -255,7 +256,7 @@ void analyseBlock(TObject *myObject,  float block[5], GamePage* page, int screen
 void addObject(b2World *world, TObject *object,TObjectData* objectDataList,int& objectNum,TObjectData** controllable)
 {
 	int i=0;
-  int ctrl_num = 0;
+  static int ctrl_num = 0;
   
 	b2PolygonShape polygonShape;
 	b2CircleShape circleShape;
@@ -290,9 +291,15 @@ void addObject(b2World *world, TObject *object,TObjectData* objectDataList,int& 
     bodyDef.active = false;
     controllable[ctrl_num] = &objectDataList[objectNum];
     if (ctrl_num == 0) ///第一只鸟可抓取,会眨眼
-      controllable[0]->life->status |= controllable[0]->life->s_pickAble | controllable[0]->life->s_eyes;
+    {
+      controllable[0]->life->status |= Life::s_pickAble 
+                                    |  Life::s_eyes;
+    }
     else ///其它鸟不可抓取,但会眨眼
-      controllable[ctrl_num]->life->status |= ~controllable[0]->life->s_pickAble | controllable[0]->life->s_eyes;
+    {
+      controllable[ctrl_num]->life->status &= ~Life::s_pickAble &  ~Life::s_clound;
+      controllable[ctrl_num]->life->status |= Life::s_eyes | Life::s_jumpAble;
+    }
     ++ctrl_num;
   }
 
@@ -328,7 +335,7 @@ void addObject(b2World *world, TObject *object,TObjectData* objectDataList,int& 
 	B2Object->CreateFixture(&myfixture);
   if(objectDataList[objectNum].life != 0)
     objectDataList[objectNum].life->body = B2Object;
-	objectNum++;
+	++objectNum;
 }
 
 //根据物体的大小形状得到PH值

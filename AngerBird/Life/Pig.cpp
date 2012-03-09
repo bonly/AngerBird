@@ -1,22 +1,22 @@
 /**
- *  @file RedBird.cpp
+ *  @file Pig.cpp
  *
- *  @date 2012-2-27
+ *  @date 2012-3-8
  *  @Author: Bonly
  */
-#include "Bird.h"
+#include "Pig.h"
 #include "../Configure.h"
 #include "../ResPool.h"
 #include "../Page.h"
 //namespace NBird{
 
-JImage* Bird::GetStatusPiC(TObjectData *)
+JImage* Pig::GetStatusPiC(TObjectData *)
 {
-  JImage *pic = GETIMG(bird[0]);
+  JImage *pic = GETIMG(pig[0]);
 
   if (Life::status & s_eyes) ///眨眼
   {
-    pic = GETIMG(bird[dt%2]);
+    pic = GETIMG(pig[dt%2]);
   }
 
   if (dt%40==0 && Life::status & s_jumpAble) ///原地跳动
@@ -42,22 +42,11 @@ JImage* Bird::GetStatusPiC(TObjectData *)
   
   return pic;
 }
-void Bird::Draw(TObjectData *status)
+void Pig::Draw(TObjectData *status)
 {
   JImage *pic = GetStatusPiC(status);
   if (pic==0) return;
 
-  if ((Life::status & s_flip) && (Life::status & s_jumpAble))
-  {
-    flip_angle += 45;
-    if (flip_angle >= 360)
-    {
-      Life::status &= ~s_flip;
-      flip_angle = 0;
-    }
-    //body->ApplyTorque(flip_angle);
-    body->SetTransform(b2Vec2(body->GetPosition().x, body->GetPosition().y), flip_angle);
-  }
   int angle = sin2oc(body->GetAngle());
 
   ///渲染
@@ -68,11 +57,11 @@ void Bird::Draw(TObjectData *status)
     y - pic->getHeight()/2 + SHIFT, 20, angle);
 }
 
-Bird::Bird():flip_angle(0)
+Pig::Pig()
 {
 }
 
-bool Bird::ShouldCollide(TObjectData *other)
+bool Pig::ShouldCollide(TObjectData *other)
 {
   bool ret = true;
   switch (other->fixture)
@@ -83,7 +72,7 @@ bool Bird::ShouldCollide(TObjectData *other)
   return ret;
 }
 
-void Bird::BeginContact(b2Contact* contact)
+void Pig::BeginContact(b2Contact* contact)
 {
   if (status & s_flying )
      status |= s_crash;
@@ -98,12 +87,12 @@ void Bird::BeginContact(b2Contact* contact)
   */
 }
 
-void Bird::EndContact(b2Contact* contact)
+void Pig::EndContact(b2Contact* contact)
 {
   
 }
 
-void Bird::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
+void Pig::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
 {
   //printf("鸟的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
   if(impulse->normalImpulses[0] >= 0.2)///检查是否大于掉羽毛的压力值

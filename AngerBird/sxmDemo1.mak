@@ -33,10 +33,14 @@
 ARM_HOME       =$(ARMHOME)
 BREW_HOME      =$(BREWDIR)
 TARGET         =sxmDemo1
-OBJS           =AEEAPP~1.o AEEMOD~1.o APAGES~1.o APPGLO~1.o APPHAN~1.o BASESC~1.o Configure.o Page.o Pre.o ResPool.o Tasks.o BuildBlock.o
-SDIR_PAGES     =pages/PreLoad.o pages/Session1.o 
+OBJS           =AEEAPP~1.o AEEMOD~1.o APAGES~1.o APPGLO~1.o APPHAN~1.o BASESC~1.o \
+	       	Configure.o Page.o ResPool.o Tasks.o BuildBlock.o ABDraw.o \
+		pre.o 
+SDIR_PAGES     =pages/PreLoad.o pages/Session1.o pages/MainEntryPage.o pages/MainGuanPage.o \
+		pages/MainStagePage.o pages/Session1.o
+SDIR_LIFE      =Life/Bird.o Life/ContactListener.o Life/Life.o Life/RedBird.o Life/Wood.o
 SDIR_OBJ       =
-APP_INCLUDES   = -I ./Box2D -I ./lua
+APP_INCLUDES   = -I ./Box2D -I ./lua -I c:/ARM/ADSv1_2/Include
 APP_LIBS       =  box2d.a $(BREWDIR)/sxmsdk/sxm_jlib.a   $(BREWDIR)/sxmsdk/sxm_font.a  $(BREWDIR)/sxmsdk/libappdll.a  
 #-------------------------------------------------------------------------------
 # Target file name and type definitions
@@ -229,7 +233,7 @@ SUB_OBJ_FILE = $(@F)
 #                           MODULE SPECIFIC RULES
 #===============================================================================
 
-APP_OBJS =  $(OBJS) $(SDIR_OBJ) $(SDIR_PAGES)
+APP_OBJS =  $(OBJS) $(SDIR_OBJ) $(SDIR_PAGES) $(SDIR_LIFE)
 
 #----------------------------------------------------------------------------
 # Lib file targets
@@ -257,15 +261,12 @@ RULE0 = e:\angerbird\angerbird\pages
 	$(ARMCPP) $(CFLAGS) $(INC) -o $(RULE0)\$(@F) $(RULE0)\$(SRC_CPP_FILE)
 	@echo ---------------------------------------------------------------
 
-#RULE3 = e:\angerbird\angerbird\obj
-#{$(RULE3)}.cpp.o:
-#	@echo ---------------------------------------------------------------
-#	@echo OBJECT $(@F)
-#	$(ARMCPP) $(CFLAGS) $(INC) -o $(RULE3)\$(@F) $(RULE3)\$(SRC_CPP_FILE)
-#	@echo ---------------------------------------------------------------
-
-
-
+RULE3 = e:\angerbird\angerbird\Life
+{$(RULE3)}.cpp.o:
+	@echo ---------------------------------------------------------------
+	@echo OBJECT $(@F)
+	$(ARMCPP) $(CFLAGS) $(INC) -o $(RULE3)\$(@F) $(RULE3)\$(SRC_CPP_FILE)
+	@echo ---------------------------------------------------------------
 
 RULE1 = r:\brew\sdk2\src
 {$(RULE1)}.c.o:

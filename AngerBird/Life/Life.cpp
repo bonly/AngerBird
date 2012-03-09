@@ -13,7 +13,8 @@
 
 Life::Life()
 {
-  status = ~s_pickAble & s_jumpAble ;
+  //status = ~s_pickAble & s_jumpAble & ~s_clound ;
+  status = 0x0;
 }
 
 Life::~Life()

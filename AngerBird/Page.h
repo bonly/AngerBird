@@ -113,7 +113,7 @@ class GamePage : public Page
 	  Image imgGrass;
     Image imgBird[5];
 
-  private:
+  public:
     b2Body* del[ARRMAX]; ///需删除的物体列表
     Animation* ani[ARRMAX];///本场景的动画列表
 
@@ -125,6 +125,30 @@ class GamePage : public Page
         if(lst[i] == 0)
         {
            lst[i] = obj;
+           return true;
+        }
+      }
+      return false;
+    }
+    bool add_del_body(b2Body* obj)
+    {
+      for (int i=0; i<ARRMAX; ++i)
+      {
+        if(del[i] == 0)
+        {
+           del[i] = obj;
+           return true;
+        }
+      }
+      return false;
+    }
+    bool add_del_ani(Animation* obj)
+    {
+      for (int i=0; i<ARRMAX; ++i)
+      {
+        if(ani[i] == 0)
+        {
+           ani[i] = obj;
            return true;
         }
       }

@@ -4,6 +4,8 @@
  *  @date 2012-2-27
  *  @Author: Bonly
  */
+#ifndef _REDBIRD_H
+#define _REDBIRD_H
 
 #include "../pre.h"
 #include "Life.h"
@@ -23,3 +25,5 @@ public:
 };
 
 //}
+
+#endif

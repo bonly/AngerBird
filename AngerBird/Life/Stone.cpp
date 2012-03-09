@@ -54,7 +54,7 @@ void Stone::Draw(TObjectData *status)
   JImage *pic = GETIMG(*pic_idx);
   gpDC->drawImageWithRotate(pic, 
     M2P(body->GetPosition().x) - pic->getWidth()/2, 
-    M2P(body->GetPosition().y) - pic->getHeight()/2 + SHIFT, 20, angle);
+    M2P(body->GetPosition().y) - pic->getHeight()/2 + SHIFT, ACHOR_HV, angle);
 }
 
 Stone::Stone()
@@ -81,7 +81,7 @@ Stone::Stone()
 
 void Stone::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
 {
-  printf("碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
+  //printf("碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
   if(impulse->normalImpulses[0] >= 3)///检查是否大于HP
   {
     gpage->push_del(this->body);

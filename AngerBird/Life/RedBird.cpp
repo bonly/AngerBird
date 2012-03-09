@@ -34,13 +34,17 @@ RedBird::RedBird()
   bird[0] = ID_redbird1;
   bird[1] = ID_redbird2;
 
-  width = S_REDBIRD_WIDTH;
-  height = S_REDBIRD_HEIGHT;
+  //width = S_REDBIRD_WIDTH;
+  //height = S_REDBIRD_HEIGHT;
+  width = BIRD_RED_RADIUS * 2.f;
+  height = S_REDBIRD_HEIGHT * 2.f;
+
 }
 
 void RedBird::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
 {
-  printf("红鸟的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
+  //printf("红鸟的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
+  /*
   if(impulse->normalImpulses[0] >= 0.1f)///检查是否大于掉羽毛的压力值
   {
     int *aniFile = 0;
@@ -65,6 +69,7 @@ void RedBird::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///
     feather->play_list = aniFile;
     gpage->push_ani(feather);
   }
+  */
 
 }
 //}

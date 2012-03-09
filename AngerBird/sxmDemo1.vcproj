@@ -360,6 +360,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Life\Pig.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Life\Pig.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Life\RedBird.cpp"
 					>
 				</File>

@@ -1,20 +1,21 @@
 /**
- *  @file RedBird.h
+ *  @file Pig.h
  *
- *  @date 2012-2-27
+ *  @date 2012-3-8
  *  @Author: Bonly
  */
-#ifndef _BIRD_H
-#define _BIRD_H
+#ifndef _PIG_H
+#define _PIG_H
 
 #include "../pre.h"
 #include "Life.h"
+
 //namespace NBird{
 class GamePage;
-class Bird : public Life
+class Pig : public Life
 {
 public:
-  Bird();
+  Pig();
   virtual JImage* GetStatusPiC(TObjectData *);
   virtual void Draw(TObjectData *);
   virtual bool ShouldCollide(TObjectData *other);
@@ -23,9 +24,8 @@ public:
   virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
   
 public:
-  int bird[2]; 
+  int pig[2]; 
   int dt; ///当前时间间隔计算
-  int flip_angle; ///筋斗的角度
 };
 
 //}

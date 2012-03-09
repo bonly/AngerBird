@@ -10,8 +10,10 @@
 #include "ResPool.h"
 #include "BuildBlock.h"
 #include "Life/Life.h"
-#include "pages/LeftMenu.h"
+#include "tasks.h"
+//#include "pages/LeftMenu.h"
 #include "Life/ContactListener.h"
+#include <math.h>
 //#include <aeeappgen.h>
 //#include "basescreen.h"
 
@@ -197,8 +199,9 @@ void GamePage::drawSlingLine(int birdx, int birdy)
 	{
 		int cutx = abs(birdx-x[i]);
 		int cuty = abs(birdy-y[i]);
-		
+	
 		float32 distance = sqrtl( pow(float(cutx),2) + pow(float(cuty),2));
+
 		///sin转换为角度(四舍五入)
 		///计算线的sin
 		float32 sina = (float32)cuty/(float32)distance;
@@ -289,6 +292,7 @@ void GamePage::onPaint()
   
 void GamePage::running()
 {
+  deleteObj(); ///删除小鸟或已破的物体
   switch(step)
   {
     case PRELOAD:
@@ -320,6 +324,7 @@ void GamePage::running()
       {
         controlled->life->status &= ~Life::s_jumpAble;///修改状态,不再跳动
         controlled->life->status |= Life::s_getReady; ///修改状态,准备
+        controlled->life->body->SetActive(false);
         int x = M2P(controlled->life->body->GetPosition().x);
         int y = M2P(controlled->life->body->GetPosition().y);
         if(JumpLine(x, y, slingX, slingY, 10) == true)
@@ -347,11 +352,18 @@ void GamePage::running()
     case GAME_SCROLL:
     case GAME_PAUSE:
     case GAME_RUNING: ///飞行中
+      if (controlled != 0 && M2P(controlled->life->body->GetPosition().x)<0) ///删除掉很远的鸟
+      {
+        push_del(controlled->life->body);
+      }
+      break;
     case GAME_OVER:  ///算成绩,显示成绩单
     case GAME_END: ///切换到下个页面
+      task->next_page = 0;
+      task->step = Tasks::NEXT_PAGE;
       break;
   }
-  deleteObj(); ///删除小鸟或已破的物体
+
   return;
 }
 
@@ -361,7 +373,7 @@ bool GamePage::getBird()
     {
       for(int i=0; i<10; ++i) ///取可用的小鸟
       {
-        if(controllable[i] != 0 && controllable[i]->life !=0)
+        if(controllable[i] != 0 && controllable[i]->life->body !=0)
         {
           controlled = controllable[i];
           return true;
@@ -374,17 +386,22 @@ bool GamePage::getBird()
 }
 void GamePage::deleteObj()
 {
-  if (controlled && ((!controlled->life->body->IsAwake()))) ///控制中的小鸟已静止
+  if (controlled) ///控制中的小鸟已静止
   {
-    if(controlled->life->status & controlled->life->s_crash) ///碰撞完静止了
-      controlled->life->status = controlled->life->s_clound; ///变云消失
-    else
+    b2Vec2 vl = controlled->life->body->GetLinearVelocity();
+    if ((abs(vl.x) <= 0.002f) && (abs(vl.y) <= 0.002f))
     {
-      world->DestroyBody(controlled->life->body);
-      controlled->life->body = 0;
-      SafeDelete(controlled->life);
-      controlled = 0;
-      step = GAME_GETBIRD;
+      if(controlled->life->status & Life::s_crash) ///碰撞完静止了
+      {
+         controlled->life->status = Life::s_clound; ///变云消失
+      }
+      else if(controlled->life->status & Life::s_clound)
+      {
+        world->DestroyBody(controlled->life->body);
+        controlled->life->body = 0;
+        controlled = 0;
+        step = GAME_GETBIRD;
+      }
     }
   }
   for (int i=0; i<ARRMAX; ++i)
@@ -419,14 +436,14 @@ bool GamePage::OnPointerPressed(int x, int y)
 {
     BOOL bRet = FALSE;
     controlled = 0;
-    MENU.OnPointerPressed(x, y);
+    //MENU.OnPointerPressed(x, y);
     switch (step)
     {
     case GAME_WAIT:
     {
       ///检查是否在控件范围
       int i = 0;
-      while (controllable[i]!=0)
+      while (controllable[i]!=0 && controllable[i]->life!=0)
       { 
         Rec rc;
         rc.height = controllable[i]->life->height;
@@ -469,7 +486,7 @@ bool GamePage::OnPointerDragged(int x, int y)
           rc.width = controlled->life->width;
           rc.x = controlled->life->x - rc.width/2;
           rc.y = controlled->life->y - rc.height/2;
-          if (InButtonPic(x, y, 0, SHIFT, rc) == 1 && (controlled->life->status & Life::s_pickAble) == true)
+          //if (InButtonPic(x, y, 0, SHIFT, rc) == 1 && (controlled->life->status & Life::s_pickAble) == true)
           {
             b2Vec2 ps;
             ps.x = P2M(x);
@@ -515,7 +532,7 @@ bool GamePage::OnPointerDragged(int x, int y)
 bool GamePage::OnPointerReleased(int x, int y)
 {
     BOOL bRet = FALSE;
-    MENU.OnPointerReleased(x, y);
+    //MENU.OnPointerReleased(x, y);
     lastY = 0;
     switch (step)
     {
@@ -528,7 +545,7 @@ bool GamePage::OnPointerReleased(int x, int y)
           rc.width = controlled->life->width;
           rc.x = controlled->life->x - rc.width/2;
           rc.y = controlled->life->y - rc.height/2;
-          if (InButtonPic(x, y, 0, SHIFT, rc) == 1 && (controlled->life->status & Life::s_pickAble) == true)
+          //if (InButtonPic(x, y, 0, SHIFT, rc) == 1 && (controlled->life->status & Life::s_pickAble) == true)
           {
             controlled->life->body->GetFixtureList()->SetRestitution(BIRD_RESTITION);
             controlled->life->body->SetActive(true);
@@ -599,8 +616,10 @@ bool GamePage::JumpLine(int &x, int &y, const int tx, const int ty, const int in
        return true;
     if (x !=tx )
       ((x+=inv)>=tx)?x=tx : x;
-    if (y !=ty )
+    if (y < ty )
       ((y+=inv)>=ty)?y=ty : y;
+    if (y > ty )
+      ((y-=inv)<=ty)?y=ty : y;
     
     return false;
 }
@@ -610,7 +629,11 @@ bool GamePage::JumpLine(int &x, int &y, const int tx, const int ty, const int in
  */
 bool GamePage::push_del(b2Body* obj)
 {
+#ifdef _WIN32
   return add_obj(del,obj);
+#else
+  return add_del_body(obj);
+#endif
 }
 
 /**
@@ -618,7 +641,11 @@ bool GamePage::push_del(b2Body* obj)
  */
 bool GamePage::push_ani(Animation* aniobj)
 {
+#ifdef _WIN32
   return add_obj(ani, aniobj);
+#else
+  return add_del_ani(aniobj);
+#endif
 }
 /**
  * @brief 播放动画

@@ -6,6 +6,7 @@
  */
 #ifndef _LIEF_H
 #define _LIEF_H
+
 #include "../pre.h"
 #include "../BuildBlock.h"
 #include "../Page.h"
@@ -38,9 +39,9 @@ class Life
       s_crash           = 0x0010, ///< 碰撞了
       s_clound          = 0x0020, ///< 变云消失
       s_flip            = 0x0040, ///< 打筋斗
-      s_getReady         = 0x0080 ///< 上弹弓
+      s_getReady        = 0x0080 ///< 上弹弓
 	  };
-    int status;
+    unsigned int status;
 
     int x;  //中心点在屏幕中的位置
     int y; 

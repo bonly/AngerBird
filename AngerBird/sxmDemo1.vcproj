@@ -352,6 +352,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Life\Ice.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Life\Ice.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Life\Life.cpp"
 					>
 				</File>

@@ -36,13 +36,13 @@ CAPageScreen::~CAPageScreen()
 int CAPageScreen::OnCreate(void* pi)
 {
 
-    //STEP 0: 在构造函数中记录全局DC和SHELL， 方便后续使用
-    gpDC        = m_pGlobal->m_pGraphics;
-    gpShell     = m_pGlobal->m_pMe->m_pIShell;
+  //STEP 0: 在构造函数中记录全局DC和SHELL， 方便后续使用
+  gpDC        = m_pGlobal->m_pGraphics;
+  gpShell     = m_pGlobal->m_pMe->m_pIShell;
 
-    gpDC->setClip();	
-    //STEP 1: 游戏的初始化工作
-    // GameInit();
+  gpDC->setClip();	
+  //STEP 1: 游戏的初始化工作
+  // GameInit();
 
 	CONF.init();
 	CONF.gravity.Set(-10.0f, 0.0f);
@@ -56,16 +56,16 @@ int CAPageScreen::OnCreate(void* pi)
 int CAPageScreen::OnDestroy(void)
 {
 
-    //STEP 8 退出应用时，释放所有的资源    
-    CancelTimer();
+  //STEP 8 退出应用时，释放所有的资源    
+  CancelTimer();
 
-    //GameRelease();
-    SafeDelete(task);
-    Configure::destory();
-    ResPool::destory();
-    //LeftMenu::destory();
-    
-    return 0;
+  //GameRelease();
+  SafeDelete(task);
+  Configure::destory();
+  ResPool::destory();
+  //LeftMenu::destory();
+
+  return 0;
 }
 
 //FALSE表示未处理消息， TRUE表示处理了消息

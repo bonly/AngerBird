@@ -5,11 +5,32 @@
  *  @Author: Bonly
  */
 
-#ifndef PRE_H_
-#define PRE_H_
+#ifndef __PRE_H__
+#define __PRE_H__
 #include <Box2D/Box2D.h>
 #include <aeestdlib.h>
 #include <jport.h>
+
+#define _DEBUG 1
+#ifdef _DEBUG
+
+#define LOGLEN  10*1024
+extern char gpcDebug[LOGLEN];
+#define _ { \
+	SPRINTF(gpcDebug, "@%s:%s----%s:%d\r\n", __DATE__, __TIME__, __FILE__, __LINE__); \
+	OutputDebugData(gpcDebug); \
+	}
+#define alog(X) { \
+	SPRINTF(gpcDebug, "@%s:%s----%s:%d:%s\r\n", __DATE__, __TIME__, __FILE__, __LINE__, X); \
+	OutputDebugData(gpcDebug); \
+	}
+#else
+#define _ 
+
+#endif //_DEBUG 
+
+bool OutputDebugData(const char* pcDbg);
+
 enum _PAINT_STATUS
 {
 	E_PAINT_NORMAL=0,

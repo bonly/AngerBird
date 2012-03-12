@@ -51,7 +51,12 @@ static int nBlockList[][8]={
 };
 
 
-
+/**
+ * 1:  使用的图片ID
+ * 2:  X
+ * 3:  Y
+ * 4:  多边形边数
+*/
 //////////////////////////////////
 static int nFloorNum=2;
 static int nFloorList[][21]={

@@ -68,7 +68,12 @@ RES(ice_ssqu_1,res/ice/ice_ssqu_1.png)
 RES(ice_ssqu_2,res/ice/ice_ssqu_2.png)
 RES(ice_stip_1,res/ice/ice_stip_1.png)
 RES(ice_stip_2,res/ice/ice_stip_2.png) 
-
+RES(ice_dytriangle_1,res/ice/ice_dytriangle_1.png)
+RES(ice_dytriangle_2,res/ice/ice_dytriangle_2.png)
+RES(ice_loop_1,res/ice/ice_loop_1.png)
+RES(ice_loop_2,res/ice/ice_loop_2.png)
+RES(ice_rtriangle_1, res/ice/ice_rtriangle_1.png)
+RES(ice_rtriangle_2, res/ice/ice_rtriangle_2.png)
 
 /*********************  Ä¾Í·  **************************/
 RES(wood_bcir_1,res/wood/wood_bcir_1.png)
@@ -110,6 +115,12 @@ RES(stone_ssqu_1,res/stone/stone_ssqu_1.png)
 RES(stone_ssqu_2,res/stone/stone_ssqu_2.png)
 RES(stone_stip_1,res/stone/stone_stip_1.png)
 RES(stone_stip_2,res/stone/stone_stip_2.png)
+RES(stone_dytriangle_1,res/stone/stone_dytriangle_1.png)
+RES(stone_dytriangle_2,res/stone/stone_dytriangle_2.png)
+RES(stone_loop_1,res/stone/stone_loop_1.png)
+RES(stone_loop_2,res/stone/stone_loop_2.png)
+RES(stone_rtriangle_1, res/stone/stone_rtriangle_1.png)
+RES(stone_rtriangle_2, res/stone/stone_rtriangle_2.png)
 
 
 /*********************  Öí  **************************/

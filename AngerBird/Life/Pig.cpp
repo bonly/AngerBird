@@ -10,35 +10,38 @@
 #include "../Page.h"
 //namespace NBird{
 
-JImage* Pig::GetStatusPiC(TObjectData *)
+JImage* Pig::GetStatusPiC(TObjectData *stat)
 {
-  JImage *pic = GETIMG(pig[0]);
+  JImage *pic = 0;
+  int* pig = 0;
+  switch(stat->shapeType)
+  {
+    case SHAPE_CROWN_PIG:
+      pig = bcrown;
+      break;
+    case SHAPE_BEARD_PIG:
+      pig = bbeard;
+      break;
+    case SHAPE_CAP_PIG:
+      pig = bcap;
+      break;
+    case SHAPE_L_PIG:
+      pig = bgeneral;
+      break;
+    case SHAPE_M_PIG:
+      pig = mgeneral;
+      break;
+    case SHAPE_S_PIG:
+      pig = sgeneral;
+      break;
+  }
 
   if (Life::status & s_eyes) ///眨眼
   {
     pic = GETIMG(pig[dt%2]);
   }
-
-  if (dt%40==0 && Life::status & s_jumpAble) ///原地跳动
-  {
-    Life::status |= s_flip;
-    body->GetFixtureList()->SetRestitution(0.f);
-    body->SetActive(true);
-
-    //body->ApplyForce(b2Vec2(100,0), body->GetWorldCenter());
-    body->ApplyForceToCenter(b2Vec2(100.f * body->GetMass(), 0.f));
-    //body->SetLinearVelocity(b2Vec2(4.f,0.f));
-  }
-
-  if (!(Life::status & s_crash))
-  {
-    if (dt%2 == 0 && Life::status & s_flying) ///飞行轨迹
-    {
-      gpage->track[gpage->track_num][0] = (int)M2P(body->GetPosition().x);
-      gpage->track[gpage->track_num][1] = (int)M2P(body->GetPosition().y);
-      ++gpage->track_num;
-    }
-  }
+  
+  ///@todo 血量检查
   
   return pic;
 }
@@ -52,39 +55,43 @@ void Pig::Draw(TObjectData *status)
   ///渲染
   x = M2P(body->GetPosition().x);
   y = M2P(body->GetPosition().y);
-  gpDC->drawImageWithRotate(pic, 
-    x - pic->getWidth()/2, 
-    y - pic->getHeight()/2 + SHIFT, 20, angle);
+  gpDC->drawImageWithRotate(pic, x, y + SHIFT, ACHOR_HV, angle);
 }
 
 Pig::Pig()
 {
+  bcrown[0] = ID_pig_bcrown_1;
+  bcrown[1] = ID_pig_bcrown_2;
+
+  bbeard[0] = ID_pig_bbeard_1;
+  bbeard[1] = ID_pig_bbeard_2;
+
+  bcap[0] = ID_pig_bcap_1;
+  bcap[1] = ID_pig_bcap_2;
+  bcap[2] = ID_pig_bcap_3;
+
+  sgeneral[0] = ID_pig_sgeneral_1;
+  sgeneral[1] = ID_pig_sgeneral_2;
+
+  mgeneral[0] = ID_pig_mgeneral_1;
+  mgeneral[1] = ID_pig_mgeneral_2;
+
+  bgeneral[0] = ID_pig_bgeneral_1;
+  bgeneral[1] = ID_pig_bgeneral_2;
+
+  status |= Life::s_eyes;
 }
 
 bool Pig::ShouldCollide(TObjectData *other)
 {
   bool ret = true;
-  switch (other->fixture)
-  {
-  case FIXTURE_BIRD:
-    ret = false;
-  }
+
   return ret;
 }
 
 void Pig::BeginContact(b2Contact* contact)
 {
-  if (status & s_flying )
-     status |= s_crash;
-  /*
-  if ((Life::status & s_flip) && (contact->GetFixtureA()->GetBody()->GetType()==b2_staticBody)) ///与地面相撞
-  {
-      Life::status &= ~s_flip;
-      flip_angle = 0;
-      //body->ApplyTorque(flip_angle);
-      body->SetTransform(b2Vec2(body->GetPosition().x, body->GetPosition().y), flip_angle);
-  }
-  */
+
 }
 
 void Pig::EndContact(b2Contact* contact)
@@ -94,7 +101,7 @@ void Pig::EndContact(b2Contact* contact)
 
 void Pig::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
 {
-  //printf("鸟的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
+  //printf("猪的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
   if(impulse->normalImpulses[0] >= 0.2)///检查是否大于掉羽毛的压力值
   {
 
@@ -102,4 +109,5 @@ void Pig::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生
   }
 
 }
+
 //}

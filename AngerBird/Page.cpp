@@ -421,7 +421,15 @@ void GamePage::DrawData()
   {
     if(TObjectData* obj = (TObjectData*)cBody->GetUserData() )
      {
-        if(obj->life != 0)
+        if (obj->fixture == FIXTURE_FLOOR)
+        {
+          int x = M2P(cBody->GetPosition().x);
+          int y = M2P(cBody->GetPosition().y);
+          int angle = sin2oc(cBody->GetAngle());
+          JImage* pic = GETIMG(obj->imgFlag);
+          gpDC->drawImageWithRotate(pic, x, y + SHIFT, ACHOR_HV, angle);
+        }
+        if (obj->life != 0)
           obj->life->Draw(obj);
         if (controlled != 0)
         {
@@ -698,7 +706,7 @@ bool Animation::play()
   int step = dt % (pic_count * interval);
 
   JImage* tmp = GETIMG(play_list[step/interval]);
-  gpDC->drawImage(tmp, x, y + GamePage::SCREEN_SHIFT_Y, 20, AEE_RO_MIRROR);
+  gpDC->drawImage(tmp, x, y + GamePage::SCREEN_SHIFT_Y, ACHOR_HV, AEE_RO_MIRROR);
   if (step >= pic_count * interval - 1)
     return true; ///全部播放完毕
 

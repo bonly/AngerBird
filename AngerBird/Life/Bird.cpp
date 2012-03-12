@@ -63,9 +63,7 @@ void Bird::Draw(TObjectData *status)
   ///äÖÈ¾
   x = M2P(body->GetPosition().x);
   y = M2P(body->GetPosition().y);
-  gpDC->drawImageWithRotate(pic, 
-    x - pic->getWidth()/2, 
-    y - pic->getHeight()/2 + SHIFT, 20, angle);
+  gpDC->drawImageWithRotate(pic, x, y + SHIFT, ACHOR_HV, angle);
 }
 
 Bird::Bird():flip_angle(0)

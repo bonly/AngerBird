@@ -24,7 +24,12 @@ public:
   virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
   
 public:
-  int pig[2]; 
+  int bcrown[2]; 
+  int bbeard[2];
+  int bcap[3];
+  int sgeneral[2];
+  int mgeneral[2];
+  int bgeneral[2];
   int dt; ///当前时间间隔计算
 };
 

@@ -3,6 +3,30 @@
 #include "Life/Life.h"
 #include "Life/Wood.h"
 #include "Life/RedBird.h"
+#include "Life/Pig.h"
+#include "Life/Stone.h"
+#include "Life/Ice.h"
+
+
+/**
+ * @note nFloorList[][21]
+ * 1:  使用的图片ID
+ * 2:  X
+ * 3:  Y
+ * 4:  多边形边数
+*/
+
+/**
+ * @note nBlockList[][8]
+ * 0: 1增加 0删除
+ * 1: 所删除物件的记号num
+ * 2: 模拟等待步数
+ * 3: objectfixture
+ * 4: objectShapeType
+ * 5: x
+ * 6: y
+ * 7: 角度
+ */
 
 int pageGravityFlag=1;  //当前页重力开关,默认打开
 
@@ -22,17 +46,16 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],
 		myObject.objectfixture=FIXTURE_FLOOR;
 		myObject.objectShapeType=SHAPE_FLOOR_POLY;
 		myObject.shapeType=SHAPE_POLY;
-		myObject.polyLines=nFloorList[i][4];
+		myObject.polyLines=nFloorList[i][4]; ///多边形的边数
 		myObject.x=getWorldNum(nFloorList[i][2]+FLOOR_LEVEL_X); ///X位置
 		myObject.y=getWorldNum(nFloorList[i][3]+screenMovey); ///Y位置
 		myObject.angle=0;
 		myObject.no = -1;
 		myObject.dynamicFlag=0;
-		myObject.imgFlag=nFloorList[i][1];
+		myObject.imgFlag=nFloorList[i][1];  ///所使用的图片ID
 		myObject.density=FLOOR_DENSITY;
 		myObject.friction=FLOOR_FRICTION;
 		myObject.restitution=FLOOR_RESTITION;
-		
 		
 		myObject.polyLines= nFloorList[i][4];
 		//
@@ -76,7 +99,7 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],
 			pageGravityFlag=1;
 		else
 			pageGravityFlag=0;
-		//模拟工具搭建时的操作
+		///模拟工具搭建时的操作
 		if (pageGravityFlag == 1)
 		{
 			int n;
@@ -120,16 +143,22 @@ void analyseBlock(TObject *myObject,  float block[5], GamePage* page, int screen
 			myObject->density=ICE_DENSITY;
 			myObject->friction=ICE_FRICTION;
 			myObject->restitution=ICE_RESTITION;
+      myObject->life = SafeNew Ice;
+      myObject->life->setSessionPage(page);
 			break;
 		case FIXTURE_STONE:
 			myObject->density=STONE_DENSITY;
 			myObject->friction=STONE_FRICTION;
 			myObject->restitution=STONE_RESTITION;
+      myObject->life = SafeNew Stone;
+      myObject->life->setSessionPage(page);
 			break;
 		case FIXTURE_PIG:
 			myObject->density=PIG_DENSITY;
 			myObject->friction=PIG_FRICTION;
 			myObject->restitution=PIG_RESTITION;
+      myObject->life = SafeNew Pig;
+      myObject->life->setSessionPage(page);
 			break;
 		}
 		/////////////////////矩形
@@ -300,7 +329,7 @@ void addObject(b2World *world, TObject *object,TObjectData* objectDataList,int& 
       controllable[ctrl_num]->life->status &= ~Life::s_pickAble &  ~Life::s_clound;
       controllable[ctrl_num]->life->status |= Life::s_eyes | Life::s_jumpAble;
     }
-    ++ctrl_num;
+    ++ctrl_num; ///可控鸟计数器自加1
   }
 
 	//

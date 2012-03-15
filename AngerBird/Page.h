@@ -44,13 +44,13 @@ public:
   int pic_count; ///文件数量
   int delay; ///延迟时间
   int interval;
-  virtual bool play();
+  bool play();
 };
 
 class GamePage : public Page
 {
   public:
-    enum {ARRMAX=50};
+    enum {ARRMAX=10};
     GamePage();
     virtual ~GamePage();
     virtual int resume();

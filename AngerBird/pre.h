@@ -11,16 +11,17 @@
 #include <aeestdlib.h>
 #include <jport.h>
 
-#define _DEBUG 1
+//#define _DEBUG 1
 #ifdef _DEBUG
 
 #define LOGLEN  10*1024
 extern char gpcDebug[LOGLEN];
-#define _ { \
-	SPRINTF(gpcDebug, "@%s:%s----%s:%d\r\n", __DATE__, __TIME__, __FILE__, __LINE__); \
-	OutputDebugData(gpcDebug); \
-	}
-#define alog(X) { \
+//#define _ { \
+//	SPRINTF(gpcDebug, "@%s:%s----%s:%d\r\n", __DATE__, __TIME__, __FILE__, __LINE__); \
+//	OutputDebugData(gpcDebug); \
+//	}
+#define _ DBGPRINTF("@%s:%s---%s:%d:\r\n", __DATE__, __TIME__, __FILE__, __LINE__) 
+#define plog(X) { \
 	SPRINTF(gpcDebug, "@%s:%s----%s:%d:%s\r\n", __DATE__, __TIME__, __FILE__, __LINE__, X); \
 	OutputDebugData(gpcDebug); \
 	}

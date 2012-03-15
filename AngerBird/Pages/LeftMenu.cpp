@@ -37,9 +37,9 @@ int LeftMenu::init()
   status = HIDE;
   btnPause.x = 250;
   btnPause.y = 30;
-  btnPause.height = ((JImage*)V_pause1->attr)->getHeight();
-  btnPause.width = ((JImage*)V_pause1->attr)->getWidth();
-  btnPause.attr = (JImage*)V_pause1->attr;
+  btnPause.height = ((JImage*)V_pause1.attr)->getHeight();
+  btnPause.width = ((JImage*)V_pause1.attr)->getWidth();
+  btnPause.attr = (JImage*)V_pause1.attr;
   return 0;
 }
 

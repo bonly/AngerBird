@@ -1,16 +1,16 @@
 /**
- *  @file RedBird.cpp
+ *  @file BombBird.cpp
  *
- *  @date 2012-2-27
+ *  @date 2012-3-12
  *  @Author: Bonly
  */
-#include "RedBird.h"
+#include "BombBird.h"
 #include "../Configure.h"
 #include "../ResPool.h"
 #include "../Page.h"
 //namespace NBird{
 
-JImage* RedBird::GetStatusPiC(TObjectData *stat)
+JImage* BombBird::GetStatusPiC(TObjectData *stat)
 {
   ++dt;
   JImage *pic = GETIMG(bird[0]);
@@ -29,19 +29,18 @@ JImage* RedBird::GetStatusPiC(TObjectData *stat)
   return pic;
 }
 
-RedBird::RedBird()
+BombBird::BombBird()
 {
-  bird[0] = ID_bird_red_1;
-  bird[1] = ID_bird_red_2;
+  bird[0] = ID_bird_bomb_1;
+  bird[1] = ID_bird_bomb_2;
+  redBomb = ID_bird_bombred;
 
-  //width = S_REDBIRD_WIDTH;
-  //height = S_REDBIRD_HEIGHT;
-  width = BIRD_RED_RADIUS * 2.f;
-  height = BIRD_RED_RADIUS * 2.f;
+  width = BIRD_BOMB_RADIUS * 2.f;
+  height = BIRD_BOMB_RADIUS * 2.f;
 
 }
 
-void RedBird::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
+void BombBird::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
 {
   //printf("红鸟的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
   //*

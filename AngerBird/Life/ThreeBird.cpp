@@ -1,16 +1,16 @@
 /**
- *  @file RedBird.cpp
+ *  @file ThreeBird.cpp
  *
- *  @date 2012-2-27
+ *  @date 2012-3-12
  *  @Author: Bonly
  */
-#include "RedBird.h"
+#include "ThreeBird.h"
 #include "../Configure.h"
 #include "../ResPool.h"
 #include "../Page.h"
 //namespace NBird{
 
-JImage* RedBird::GetStatusPiC(TObjectData *stat)
+JImage* ThreeBird::GetStatusPiC(TObjectData *stat)
 {
   ++dt;
   JImage *pic = GETIMG(bird[0]);
@@ -29,25 +29,24 @@ JImage* RedBird::GetStatusPiC(TObjectData *stat)
   return pic;
 }
 
-RedBird::RedBird()
+ThreeBird::ThreeBird()
 {
-  bird[0] = ID_bird_red_1;
-  bird[1] = ID_bird_red_2;
+  bird[0] = ID_bird_three_1;
+  bird[1] = ID_bird_three_2;
 
-  //width = S_REDBIRD_WIDTH;
-  //height = S_REDBIRD_HEIGHT;
-  width = BIRD_RED_RADIUS * 2.f;
-  height = BIRD_RED_RADIUS * 2.f;
+  width = BIRD_THREE_RADIUS * 2.f;
+  height = BIRD_THREE_RADIUS * 2.f;
 
 }
 
-void RedBird::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
+void ThreeBird::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///发生碰撞处理后
 {
   //printf("红鸟的碰撞冲量为: %lf\n",impulse->normalImpulses[0]);
   //*
   if(impulse->normalImpulses[0] >= 0.1f)///检查是否大于掉羽毛的压力值
   {
     int *aniFile = 0;
+    /*
     Animation* clound = SafeNew Animation(dt,0,2);
     clound->pic_count = 3;
     clound->x = M2P(body->GetPosition().x);
@@ -58,7 +57,7 @@ void RedBird::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) ///
     aniFile[2] = ID_whitecloud_cir;
     clound->play_list = aniFile;
     gpage->push_ani(clound);
-
+  */
     Animation* feather = SafeNew Animation(dt,1,1);
     feather->pic_count = 2;
     feather->x = M2P(body->GetPosition().x);

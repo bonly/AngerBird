@@ -29,6 +29,11 @@ extern bool gPaintStatus;
  * 6: y
  * 7: 角度
  */
+
+
+
+
+//////////////////////////////////
 static int nBlockNum=17;
 static int nBlockList[][8]={ 
 {1,1,11,1,2,32,66,0},
@@ -51,12 +56,7 @@ static int nBlockList[][8]={
 };
 
 
-/**
- * 1:  使用的图片ID
- * 2:  X
- * 3:  Y
- * 4:  多边形边数
-*/
+
 //////////////////////////////////
 static int nFloorNum=2;
 static int nFloorList[][21]={
@@ -65,21 +65,24 @@ static int nFloorList[][21]={
 };
 
 
+
 //////////////////////////////////
 static int nBirdNum=4;
 static int nBirdList[][8]={ 
 {1,0,7,3,21,12,170,0},
 {1,1,16,3,21,12,195,0},
 {1,2,8,3,21,12,220,0},
-{1,3,13,3,21,12,245, 0}
+{1,3,13,3,21,11,245, 0}
 };
+//////////////////////////////////
+
 
 static int nBirdFloorNum=0;
 static int nBirdFloorList[][21]={
 	{0}
 };
 
-static int objectNum=0;
+int objectNum=0;
 static TObjectData objectDataList[MAX_OBJECTS];    //物体userdata的全局变量
 static TObjectData* s_controllable[10]; ///可控制物列表
 
@@ -88,7 +91,6 @@ extern int firstEnterFlag;
 Session1::Session1(void)
 {
   step = PRELOAD;
-  objectNum = 0;///密须重置一次,防止重载此页时值累加
 }
 
 Session1::~Session1(void)
@@ -217,6 +219,7 @@ void Session1::onPaint()
 
 int Session1::createWorld()
 {
+  objectNum = 0;///密须重置一次,防止重载此页时值累加
   world->SetDebugDraw(&ab);
   //addWall(world, 200, 720, -200,240);
   initBlock(world, nFloorNum, nFloorList, nBlockNum, 

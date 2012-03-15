@@ -1,3 +1,8 @@
+/*
+ *
+ *  @date 2012-3-12 LiXiang 增加飞出边界的处理
+ *  @date 2012-3-12 Bonly   增加各种鸟及建筑物材料
+ */
 #include "BuildBlock.h"
 #include "Configure.h"
 #include "Life/Life.h"
@@ -6,7 +11,10 @@
 #include "Life/Pig.h"
 #include "Life/Stone.h"
 #include "Life/Ice.h"
-
+#include "Life/SpeedBird.h"
+#include "Life/BombBird.h"
+#include "Life/ThreeBird.h"
+#include "Life/EggBird.h"
 
 /**
  * @note nFloorList[][21]
@@ -29,12 +37,14 @@
  */
 
 int pageGravityFlag=1;  //当前页重力开关,默认打开
+int ctrl_num = 0;
 
 void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],
                int& nBlockNum, int nBlockList[][8],TObjectData* objectDataList,int& objectNum,
                TObjectData** controllable, GamePage* page, int screenMovey)
 {
 	int i = 0, j = 0;
+  ctrl_num = 0;
 
 	////////初始化地面
 	for (i=0; i<nFloorNum; i++)
@@ -42,7 +52,7 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],
 		TObject myObject;
 		//左边(右边)，图片ID，中心点X，中心点Y，　共几边, x1,y1......
 		int shiftnum=0;
-    myObject.life = 0;
+        myObject.life = 0;
 		myObject.objectfixture=FIXTURE_FLOOR;
 		myObject.objectShapeType=SHAPE_FLOOR_POLY;
 		myObject.shapeType=SHAPE_POLY;
@@ -69,10 +79,12 @@ void initBlock(b2World *world, int nFloorNum, int nFloorList[][21],
 	for (i=0; i< nBlockNum; i++)
 	{
 		TObject myObject;	
-    myObject.life = 0;
-    myObject.no = nBlockList[i][1]; ///位1:记录号
+        myObject.life = 0;
+        myObject.no = nBlockList[i][1]; ///位1:记录号
 		float data[5];
-		//
+		
+		CONF.initBorderline( nBlockList[i][6] ); //物体Y坐标
+
     if (nBlockList[i][0] == 1)  ///位0:增加操作
 		{
 			int m;
@@ -143,22 +155,22 @@ void analyseBlock(TObject *myObject,  float block[5], GamePage* page, int screen
 			myObject->density=ICE_DENSITY;
 			myObject->friction=ICE_FRICTION;
 			myObject->restitution=ICE_RESTITION;
-      myObject->life = SafeNew Ice;
-      myObject->life->setSessionPage(page);
+            myObject->life = SafeNew Ice;
+            myObject->life->setSessionPage(page);
 			break;
 		case FIXTURE_STONE:
 			myObject->density=STONE_DENSITY;
 			myObject->friction=STONE_FRICTION;
 			myObject->restitution=STONE_RESTITION;
-      myObject->life = SafeNew Stone;
-      myObject->life->setSessionPage(page);
+            myObject->life = SafeNew Stone;
+            myObject->life->setSessionPage(page);
 			break;
 		case FIXTURE_PIG:
 			myObject->density=PIG_DENSITY;
 			myObject->friction=PIG_FRICTION;
 			myObject->restitution=PIG_RESTITION;
-      myObject->life = SafeNew Pig;
-      myObject->life->setSessionPage(page);
+            myObject->life = SafeNew Pig;
+            myObject->life->setSessionPage(page);
 			break;
 		}
 		/////////////////////矩形
@@ -240,14 +252,24 @@ void analyseBlock(TObject *myObject,  float block[5], GamePage* page, int screen
 				break;
 			case SHAPE_THREE_BIRD:
 				myObject->data[0]=getWorldNum(BIRD_THREE_RADIUS);
+                myObject->life = SafeNew ThreeBird;
+                myObject->life->setSessionPage(page);
 				break;
 			case SHAPE_BOMB_BIRD:
 				myObject->data[0]=getWorldNum(BIRD_BOMB_RADIUS);
+                myObject->life = SafeNew BombBird;
+                myObject->life->setSessionPage(page);
 				break;
 			case SHAPE_EGG_BIRD:
 				myObject->data[0]=getWorldNum(BIRD_EGG_RADIUS);
+                myObject->life = SafeNew EggBird;
+                myObject->life->setSessionPage(page);
 				break;
-
+            case SHAPE_SPEED_BIRD: 
+				myObject->data[0]=getWorldNum(BIRD_RED_RADIUS);
+                myObject->life = SafeNew SpeedBird;
+                myObject->life->setSessionPage(page);
+                break;
 			}
 		}
 		else  //其它三角形
@@ -285,7 +307,6 @@ void analyseBlock(TObject *myObject,  float block[5], GamePage* page, int screen
 void addObject(b2World *world, TObject *object,TObjectData* objectDataList,int& objectNum,TObjectData** controllable)
 {
 	int i=0;
-  static int ctrl_num = 0;
   
 	b2PolygonShape polygonShape;
 	b2CircleShape circleShape;

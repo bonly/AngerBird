@@ -21,20 +21,15 @@ class ResPool
 
   public:
     ResPool();
-    void fixRelation(int idx);
+    void fixRelation();
     virtual ~ResPool();
 
     template<typename T>
     T* getObj(int ID)
     {
-      if (ID > RES_MAX)
+      if (ID > RES_MAX || ID < 0)
         return 0;
 
-      if (List[ID]==0)
-      {
-        List[ID] = SafeNew(T);
-        fixRelation(ID);
-      }
       return (List[ID]);
     }
 
@@ -87,7 +82,7 @@ enum RES{
 #undef RES
 */
 
-#define RES(O,F) extern OBJ<Obj,void*>* V_##O;
+#define RES(O,F) extern OBJ<Obj,void*> V_##O;
 #include "Resource.inc"
 #undef RES
 

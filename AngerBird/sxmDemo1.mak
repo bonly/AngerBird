@@ -38,7 +38,9 @@ OBJS           =AEEAPP~1.o AEEMOD~1.o APAGES~1.o APPGLO~1.o APPHAN~1.o BASESC~1.
 		pre.o 
 SDIR_PAGES     =pages/PreLoad.o pages/Session1.o pages/MainEntryPage.o pages/MainGuanPage.o \
 		pages/MainStagePage.o pages/Session1.o
-SDIR_LIFE      =Life/Bird.o Life/ContactListener.o Life/Life.o Life/RedBird.o Life/Wood.o
+SDIR_LIFE      =Life/Bird.o Life/ContactListener.o Life/Life.o Life/RedBird.o Life/Wood.o \
+    Life/BombBird.o Life/EggBird.o Life/Ice.o Life/Pig.o Life/SpeedBird.o Life/Stone.o \
+    Life/ThreeBird.o
 SDIR_OBJ       =
 APP_INCLUDES   = -I ./Box2D -I ./lua -I c:/ARM/ADSv1_2/Include
 APP_LIBS       =  box2d.a $(BREWDIR)/sxmsdk/sxm_jlib.a   $(BREWDIR)/sxmsdk/sxm_font.a  $(BREWDIR)/sxmsdk/libappdll.a  
@@ -107,7 +109,7 @@ OUT = -c                        # Object file output only
 # Compiler/assembler debug options
 #-------------------------------------------------------------------------------
 
-DBG = -g                        # Enable debug
+DBG = #-g  -D_DEBUG                      # Enable debug
 
 #-------------------------------------------------------------------------------
 # Compiler optimization options

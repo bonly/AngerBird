@@ -344,11 +344,27 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Life\BombBird.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Life\BombBird.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Life\ContactListener.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Life\ContactListener.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Life\EggBird.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Life\EggBird.h"
 					>
 				</File>
 				<File
@@ -384,11 +400,27 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Life\SpeedBird.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Life\SpeedBird.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Life\Stone.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Life\Stone.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Life\ThreeBird.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Life\ThreeBird.h"
 					>
 				</File>
 				<File

@@ -3,6 +3,7 @@
  *
  *  @date 2012-2-27
  *  @Author: Bonly
+ *  @date LiXiang 增加小鸟飞出界的处理
  */
 #include "pre.h"
 #include "Configure.h"
@@ -98,6 +99,7 @@ int GamePage::init()
   contact_filter = SafeNew ContactFilter;
   world->SetContactFilter(contact_filter);
   idxControl = -1;
+  track_num = 0;///初始化飞行轨迹
  
   slingx += FLOOR_LEVEL_X;  //弹工位置
   //slingx = 120;
@@ -386,11 +388,12 @@ bool GamePage::getBird()
 }
 void GamePage::deleteObj()
 {
-  if (controlled) ///控制中的小鸟已静止
+  if (controlled) ///控制中的小鸟已静止或出界问题
   {
     b2Vec2 vl = controlled->life->body->GetLinearVelocity();
-    printf("x=%lf y=%lf\n",vl.x,vl.y);
-    if ((abs(vl.x) <= 0.01f) && (abs(vl.y) <= 1.7f))
+    b2Vec2 pos = controlled->life->body->GetPosition();
+    int poxY = M2P(pos.y);
+    if ((abs(vl.x) <= 0.01f) || (abs(vl.y) <= 1.7f) ||(CONF.nMaxY + SCREEN_SHIFT_Y < poxY ))
     {
       if(controlled->life->status & Life::s_crash) ///碰撞完静止了
       {
@@ -403,6 +406,10 @@ void GamePage::deleteObj()
         controlled = 0;
         step = GAME_GETBIRD;
       }
+	    else if( CONF.nMaxY + SCREEN_SHIFT_Y < poxY )
+	    {
+		   controlled->life->status = Life::s_clound; ///小鸟出界了，变云消失
+	    }
     }
   }
   for (int i=0; i<ARRMAX; ++i)
@@ -450,27 +457,30 @@ bool GamePage::OnPointerPressed(int x, int y)
     {
     case GAME_WAIT:
     {
-      ///检查是否在控件范围
-      int i = 0;
-      while (controllable[i]!=0 && controllable[i]->life!=0)
-      { 
-        Rec rc;
-        rc.height = controllable[i]->life->height;
-        rc.width = controllable[i]->life->width;
-        rc.x = controllable[i]->life->x - rc.width/2;
-        rc.y = controllable[i]->life->y - rc.height/2;
-        if (InButtonPic(x, y, 0, SHIFT, rc) == 1 && (controllable[i]->life->status & Life::s_pickAble) == true)
-        {
-            controlled = controllable[i];
-            controlled->life->status &= ~Life::s_jumpAble;
-            idxControl = i;
-            break;
+      if(controlled == 0)
+      {
+        ///检查是否在控件范围
+        int i = 0;
+        while (controllable[i]!=0 && controllable[i]->life!=0)
+        { 
+          Rec rc;
+          rc.height = controllable[i]->life->height;
+          rc.width = controllable[i]->life->width;
+          rc.x = controllable[i]->life->x - rc.width/2;
+          rc.y = controllable[i]->life->y - rc.height/2;
+          if (InButtonPic(x, y, 0, SHIFT, rc) == 1 && (controllable[i]->life->status & Life::s_pickAble) == true)
+          {
+              controlled = controllable[i];
+              controlled->life->status &= ~Life::s_jumpAble;
+              idxControl = i;
+              break;
+          }
+          ++i;
         }
-        ++i;
+        if (controlled == 0)
+          lastY = y;
+        break;
       }
-      if (controlled == 0)
-        lastY = y;
-      break;
     }
     case GAME_SCROLL:
     case GAME_RUNING:
@@ -576,6 +586,7 @@ bool GamePage::OnPointerReleased(int x, int y)
             controlled->life->status |= controlled->life->s_flying;
             //controlled = 0;
             step = GAME_RUNING;
+            track_num = 0;///重置上次的飞行轨迹
           }
         }
         break;
@@ -663,7 +674,7 @@ bool GamePage::push_ani(Animation* aniobj)
 bool GamePage::PlayAnimation()
 {
   bool ret = true;
-  for (int i=0; i<ARRMAX; ++i)
+  for (int i=0; i<10; ++i)
   {
     if(ani[i]!=0)
     {
@@ -703,10 +714,11 @@ bool Animation::play()
     --delay;
     return false;
   }
-  int step = dt % (pic_count * interval);
+  int step = (pic_count * interval) % dt;
 
   JImage* tmp = GETIMG(play_list[step/interval]);
-  gpDC->drawImage(tmp, x, y + GamePage::SCREEN_SHIFT_Y, ACHOR_HV, AEE_RO_MIRROR);
+  if (tmp)
+    gpDC->drawImage(tmp, x, y + GamePage::SCREEN_SHIFT_Y, ACHOR_HV, AEE_RO_MIRROR);
   if (step >= pic_count * interval - 1)
     return true; ///全部播放完毕
 

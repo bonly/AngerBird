@@ -66,7 +66,9 @@ int convRotAngle(int angle)
 }
 
 #include "JFileInputStream.h"
+#ifdef _DEBUG
 char gpcDebug[LOGLEN];
+#endif
 
 bool OutputDebugData(const char* pcDbg)
 {

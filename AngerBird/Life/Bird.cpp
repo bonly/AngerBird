@@ -34,9 +34,12 @@ JImage* Bird::GetStatusPiC(TObjectData *)
   {
     if (dt%2 == 0 && Life::status & s_flying) ///·ÉĞĞ¹ì¼£
     {
-      gpage->track[gpage->track_num][0] = (int)M2P(body->GetPosition().x);
-      gpage->track[gpage->track_num][1] = (int)M2P(body->GetPosition().y);
-      ++gpage->track_num;
+      if(gpage->track_num < GamePage::ARRMAX)
+      {
+        gpage->track[gpage->track_num][0] = (int)M2P(body->GetPosition().x);
+        gpage->track[gpage->track_num][1] = (int)M2P(body->GetPosition().y);
+        ++gpage->track_num;
+      }
     }
   }
   

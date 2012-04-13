@@ -38,7 +38,7 @@ OBJ<Obj,void*>*  List[]={
 #define RES(X,F) \
  void load_##X(void*) { \
  if(V_##X.attr==0) \
-   V_##X.attr =  SafeNew JImage(#F, TRUE); \
+   V_##X.attr = Image_createImage(gpDC,#F); \
 }
 #include "Resource.inc"
 #undef RES
@@ -48,7 +48,12 @@ OBJ<Obj,void*>*  List[]={
 void DELIMG(int idx)
 {
   if (idx >= RES_MAX || idx < 0) return;
-  SafeDelete(List[idx]->attr);
+  //SafeDelete(List[idx]->attr);
+  if (List[idx]->attr)
+  {
+    delete (JImage*)List[idx]->attr;
+    List[idx]->attr = 0;   
+  }
 }
 
 ResPool* ResPool::resp = 0;
@@ -105,8 +110,6 @@ JImage* GETIMG(int idx)
      List[idx]->create(0);
   }
   JImage* res = (JImage*)List[idx]->attr;
-  if (res==0)
-    throw "no ";
   return res;
 }
 

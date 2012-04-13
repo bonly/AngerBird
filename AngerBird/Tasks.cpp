@@ -16,10 +16,10 @@ Tasks *task = 0;
 
 PageEntry Tasks::list[] =
 {
-  { 0, Session1::create},
 	{ 0, MainEntryPage::create},
 	{ 0, MainStagePage::create},
 	{ 0, MainGuanPage::create},
+  { 0, Session1::create},
   { 0, 0 }
 };
 

@@ -1,3 +1,4 @@
+//#include "debug_new.h"
 #include "APageScreen.h"
 #include "osport.h"
 #include "jport.h"
@@ -149,7 +150,18 @@ int CAPageScreen::OnPaint(void* pi)
   {
     task->list[idx].page->onPaint();
   }
-    return 0;
+    
+  if(task->current_page == 1)
+  {
+    task->next_page = 2;
+    task->step = Tasks::NEXT_PAGE;
+  }
+  else
+  {
+    task->next_page = 1;
+    task->step = Tasks::NEXT_PAGE;
+  }
+  return 0;
 }
 
 void CAPageScreen::OnTimer(void)
@@ -170,6 +182,7 @@ void CAPageScreen::OnTimer(void)
       {
         destroyApp(false);
       }
+      task->current_page = task->next_page;
       task->step = task->CURRENT_PAGE;
     }
     case Tasks::CURRENT_PAGE:
@@ -178,7 +191,7 @@ void CAPageScreen::OnTimer(void)
       {
         if (task->list[idx].page == 0)
         {
-          firstEnterFlag = 2;///加载等待蒙层
+          //firstEnterFlag = 2;///加载等待蒙层
           ///创建并初始化页面
           task->list[idx].page = task->list[idx].creatFcn();
           task->list[idx].page->init();
@@ -189,7 +202,7 @@ void CAPageScreen::OnTimer(void)
       break;
     }
   }
-
+  
   //STEP 3 游戏定时器回调, 在这里调用游戏的主逻辑
   //主逻辑
   OnPaint(NULL);
@@ -205,6 +218,17 @@ void CAPageScreen::OnTimer(void)
   //限制在30FPS以下， 如果当前时间小于30MS， 计算SLEEP时间
   //如果游戏比较简单，或者追求速度， 只要SetTimer(5)就好了
   SetTimer(1);   
+
+    if(task->current_page == 0)
+    {
+        task->next_page = 1;
+        task->step = Tasks::NEXT_PAGE;
+    }
+    else
+    {
+        task->next_page = 0;
+        task->step = Tasks::NEXT_PAGE;
+    }
 }
 
 BOOL CAPageScreen::OnSuspend()
